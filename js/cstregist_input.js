@@ -13,11 +13,25 @@ $(document).ready(function () {
   $("#cstregistconfirm").on("click", function () {
     // ボタン連打対策
     $("#cstregistconfirm").prop("disabled", true);
-    // 顧客情報確認画面へ
-    window.location.href = "./cstregist_confirm.html" + "?cstId=" + prms.get('cstId');
+    // パラメータチェック
+    // checkCstParam()
+    // .then (() =>{
+    // tmpに顧客情報入力画面の各パラメータを一時保存
+    setTmpCstInfo(prms.get('cstId'))
+      .then(() => {
+        // 顧客情報確認画面へ
+        window.location.href = "./cstregist_confirm.html" + "?cstId=" + prms.get('cstId');
+      })
+      .catch((error) => {
+        window.location.href = "./index.html"
+      })
+    // }
+    // .catch (() => {
+    //    // エラーメッセージ表示
+    // })
   });
   $("#backtosearchresult").on("click", function () {
     // 名寄せ検索結果画面に戻る
-    window.location.href = "./cstregist_searchresult.html";
+    window.location.href = "./cstregist_search.html"
   });
 });

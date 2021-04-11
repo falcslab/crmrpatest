@@ -4,7 +4,7 @@
 <script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
-<script type="text/javascript" src="./js/cstregist_input.js"></script>
+<script type="text/javascript" src="./js/cstregist_confirm.js"></script>
 <script type="text/javascript" src="./js/db/db_m_user.js"></script>
 <script type="text/javascript" src="./js/db/db_m_pref.js"></script>
 <script type="text/javascript" src="./js/db/db_m_customer.js"></script>
@@ -100,7 +100,7 @@
           <label for="post_cd" class="head">都道府県</label>
         </dt>
         <dd class="">
-          <select class="form-select" id="pref_list" name="pref_list"></select>
+          <select class="form-select" id="pref_list" name="pref_list" disabled></select>
         </dd>
         <dt class="cstlabel form-group form-inline">
           <label for="addr1" class="head">市区町村番地</label>
@@ -129,13 +129,13 @@
       </dl>
       <dl class="btn">
         <dd class="btn">
-          <button type="button" class="btn btn-primary btn-block" id="backtosearchresult">
-            名寄せ検索結果画面に戻る
+          <button type="button" class="btn btn-primary btn-block" id="backtocstinput">
+            顧客情報入力画面に戻る
           </button>
         </dd>
         <dd class="btn">
-          <button type="button" class="btn btn-primary btn-block" id="btncstsearch">
-            確認
+          <button type="button" class="btn btn-primary btn-block" id="btncstcomp">
+            登録
           </button>
         </dd>
       </dl>

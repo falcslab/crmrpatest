@@ -75,7 +75,7 @@ async function cstsearch(
     });
 
   // 検索結果画面に紐付くtmpデータを削除
-  await db.tmp.where({ "func_id": FUNC_ID_CSTREGIST_RESULT })
+  await db.tmp.where({ "func_id": FUNC_ID_CSTREGIST_SEARCHRESULT })
     .delete().catch((error) => {
       console.error(error);
     });
@@ -83,7 +83,7 @@ async function cstsearch(
   if (result.length != 0) {
     for (let res of result) {
       // 検索結果画面のIDをセット
-      res.func_id = FUNC_ID_CSTREGIST_RESULT;
+      res.func_id = FUNC_ID_CSTREGIST_SEARCHRESULT;
       await db.tmp.put(res).catch((error) => {
         console.error(error);
       });
@@ -98,7 +98,7 @@ async function getCstSearchResult() {
 
   await db.tmp
     .where("func_id")
-    .equals(FUNC_ID_CSTREGIST_RESULT)
+    .equals(FUNC_ID_CSTREGIST_SEARCHRESULT)
     .each((tmp) => {
       tmpArr.push(tmp);
     });
@@ -146,6 +146,24 @@ async function getCstInfo(cstId) {
     throw new Error("該当顧客情報なし");
   }
   // パラメータ入力
+  setCstParam(cstInfo)
+}
+
+async function getTmpCstInfo(cstId) {
+  const tmpCstInfo = db.tmp.get({ "func_id": FUNC_ID_CSTREGIST_CONFIRM, "cst_id": cstId })
+    .catch((error) => {
+      if (tmpCstInfo == null) {
+        throw new Error("該当顧客入力情報なし");
+      }
+    })
+  // tmpCstInfo[0]であるべき？
+  console.log(tmpCstInfo)
+  // パラメータ入力
+  setCstParam(tmpCstInfo)
+}
+
+// 顧客入力・確認　パラメータ入力
+function setCstParam(cstInfo) {
   $("#cst_id").val(cstInfo.cst_id);
   $("#cst_name_lst").val(cstInfo.cst_name_lst);
   $("#cst_name_fst").val(cstInfo.cst_name_fst);
@@ -166,6 +184,42 @@ async function getCstInfo(cstId) {
   $("#addr2").val(cstInfo.addr2);
   $("#wkplace_name").val(cstInfo.wkplace_name);
   $("#wkplace_tel").val(cstInfo.wkplace_tel);
+}
+
+async function setTmpCstInfo(cstId) {
+  // 検索結果画面に紐付くtmpデータを削除
+  await db.tmp.where({ "func_id": FUNC_ID_CSTREGIST_CONFIRM })
+    .delete().catch((error) => {
+      console.error(error);
+    });
+  await db.tmp.put({
+    func_id: FUNC_ID_CSTREGIST_CONFIRM,
+    cst_id: cstId,
+    cst_name_lst: $("#cst_name_lst").val(),
+    cst_name_fst: $("#cst_name_fst").val(),
+    cst_name_kana_lst: $("#cst_name_kana_lst").val(),
+    cst_name_kana_fst: $("#cst_name_kana_fst").val(),
+    sex: "1", //$("#sex").val(),
+    birthday: $("#birthday").val(),
+    home_tel: $("#home_tel").val(),
+    mbl_tel: $("#mbl_tel").val(),
+    mailaddr: $("#mailaddr").val(),
+    post_cd: $("#post_cd").val(),
+    pref_cd: "", //$("#pref_list").val(),
+    addr1: $("#addr1").val(),
+    addr2: $("#addr2").val(),
+    wkplace_name: $("#wkplace_name").val(),
+    wkplace_tel: $("#wkplace_tel").val(),
+    // ステータス
+    // 申請No
+    // 申請日
+    // 申請ユーザーID
+    // 承認区分
+    // 画面区分
+  })
+    .catch((error) => {
+      throw new Error("顧客情報更新失敗");
+    })
 }
 
 // ===========================================================================

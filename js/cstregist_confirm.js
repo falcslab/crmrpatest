@@ -7,17 +7,18 @@ $(document).ready(function () {
   const prms = url.searchParams;
 
   getPrefList()
-  getCstInfo(prms.get('cstId')).catch(() => {
-    window.location.href = "./index.html"
-  });
+  getTmpCstInfo(prms.get('cstId'))
+    .catch((error) => {
+      // window.location.href = "./index.html"
+    });
   $("#cstregist_confirm").on("click", function () {
     // ボタン連打対策
     $("#cstregist_confirm").prop("disabled", true);
     // 顧客情報確認画面へ
-    window.location.href = "./custregist_confirm.html";
+    window.location.href = "./cstregist_complete.html";
   });
-  $("#backtosearchresult").on("click", function () {
-    // 名寄せ検索結果画面に戻る
-    window.location.href = "./cstregist_searchresult.html";
+  $("#backtocstinput").on("click", function () {
+    // 顧客情報入力画面へ戻る
+    window.location.href = "./cstregist_input.html" + "?cstId=" + prms.get('cstId');
   });
 });
