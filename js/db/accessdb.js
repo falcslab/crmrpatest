@@ -141,7 +141,7 @@ async function getPrefList() {
 }
 
 async function getCstInfo(cstId) {
-  const cstInfo = await db.customer.get({ "cst_id": cstId })
+  const cstInfo = await db.customer.get({ cst_id: cstId })
   if (cstInfo == null) {
     throw new Error("該当顧客情報なし");
   }
@@ -150,14 +150,12 @@ async function getCstInfo(cstId) {
 }
 
 async function getTmpCstInfo(cstId) {
-  const tmpCstInfo = db.tmp.get({ "func_id": FUNC_ID_CSTREGIST_CONFIRM, "cst_id": cstId })
+  const tmpCstInfo = await db.tmp.get({ func_id: FUNC_ID_CSTREGIST_CONFIRM, cst_id: cstId })
     .catch((error) => {
       if (tmpCstInfo == null) {
         throw new Error("該当顧客入力情報なし");
       }
     })
-  // tmpCstInfo[0]であるべき？
-  console.log(tmpCstInfo)
   // パラメータ入力
   setCstParam(tmpCstInfo)
 }
