@@ -1,8 +1,9 @@
 const db = new Dexie("cmsRPATest");
-let cstListTag =
-  "<tr><th>{$no}</th><td><a href='./cstregist_input.html'>{$cstId}</a></td><td>{$cstNameLst}</td><td>{$cstNameFst}</td>" +
+const cstListTag =
+  "<tr><th>{$no}</th><td><a href='./cstregist_input.html?cstId={$cstId}' name='cstIdlink'>{$cstId}</button></td><td>{$cstNameLst}</td><td>{$cstNameFst}</td>" +
   "<td>{$cstNameKanaLst}</td><td>{$cstNameKanaFst}</td><td>{$birthDay}</td>" +
   "<td>{$homeTel}</td><td>{$mblTel}</td></tr>";
+const prefTag = "<option value={$prefCd}>{$prefName}</option>"
 
 function initdb() {
   db.version(1).stores({
@@ -16,15 +17,15 @@ function initdb() {
 
 function bulkputdb() {
   db.user.bulkPut(m_user).catch((error) => {
-    console.log(error);
+    console.error(error);
   });
 
   db.pref.bulkPut(m_pref).catch((error) => {
-    console.log(error);
+    console.error(error);
   });
 
   db.customer.bulkPut(m_customer).catch((error) => {
-    console.log(error);
+    console.error(error);
   });
 }
 
@@ -70,22 +71,21 @@ async function cstsearch(
       result.push(cst);
     })
     .catch((error) => {
-      console.log("検索結果0件");
+      console.error("検索結果0件");
     });
 
   // 検索結果画面に紐付くtmpデータを削除
   await db.tmp.where({ "func_id": FUNC_ID_CSTREGIST_RESULT })
     .delete().catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 
   if (result.length != 0) {
     for (let res of result) {
-      console.log(res)
       // 検索結果画面のIDをセット
       res.func_id = FUNC_ID_CSTREGIST_RESULT;
       await db.tmp.put(res).catch((error) => {
-        console.log(error);
+        console.error(error);
       });
     }
   } else {
@@ -103,13 +103,17 @@ async function getCstSearchResult() {
       tmpArr.push(tmp);
     });
 
+  if (tmpArr.length == 0) {
+    throw new Error("検索結果0件");
+  }
+
   // 画面表示用にパラメータ変換
   let i = 0;
   for (let tm of tmpArr) {
     // パラメータ置換
     let tmpTag = cstListTag;
     tmpTag = tmpTag.replace("{$no}", i + 1);
-    tmpTag = tmpTag.replace("{$cstId}", tm.cst_id);
+    tmpTag = tmpTag.replaceAll("{$cstId}", tm.cst_id);
     tmpTag = tmpTag.replace("{$cstNameFst}", tm.cst_name_fst);
     tmpTag = tmpTag.replace("{$cstNameLst}", tm.cst_name_lst);
     tmpTag = tmpTag.replace("{$cstNameKanaFst}", tm.cst_name_kana_fst);
@@ -121,6 +125,47 @@ async function getCstSearchResult() {
     $("tbody").append(tmpTag);
     i++;
   }
+}
+
+async function getPrefList() {
+  let prefListTag = ""
+  const pref = await db.pref.toArray()
+  for (let pf of pref) {
+    let tmpSelectPrefTag = prefTag
+    tmpSelectPrefTag = tmpSelectPrefTag.replace("{$prefCd}", pf.pref_cd);
+    tmpSelectPrefTag = tmpSelectPrefTag.replace("{$prefName}", pf.pref_name);
+    prefListTag = prefListTag + tmpSelectPrefTag
+  }
+  $("#pref_list").append(prefListTag);
+
+}
+
+async function getCstInfo(cstId) {
+  const cstInfo = await db.customer.get({ "cst_id": cstId })
+  if (cstInfo == null) {
+    throw new Error("該当顧客情報なし");
+  }
+  // パラメータ入力
+  $("#cst_id").val(cstInfo.cst_id);
+  $("#cst_name_lst").val(cstInfo.cst_name_lst);
+  $("#cst_name_fst").val(cstInfo.cst_name_fst);
+  $("#cst_name_kana_lst").val(cstInfo.cst_name_kana_lst);
+  $("#cst_name_kana_fst").val(cstInfo.cst_name_kana_fst);
+  if (cstInfo.sex == "1") {
+    $("input:radio[name='radio_sex']").val(['man']);
+  } else {
+    $("input:radio[name='radio_sex']").val(['woman']);
+  }
+  $("#birthday").val(cstInfo.birthday);
+  $("#home_tel").val(cstInfo.home_tel);
+  $("#mbl_tel").val(cstInfo.mbl_tel);
+  $("#mailaddr").val(cstInfo.mailaddr);
+  $("#post_cd").val(cstInfo.post_cd);
+  $("#pref_list option[value='" + cstInfo.pref_cd + "']").prop("selected", true);
+  $("#addr1").val(cstInfo.addr1);
+  $("#addr2").val(cstInfo.addr2);
+  $("#wkplace_name").val(cstInfo.wkplace_name);
+  $("#wkplace_tel").val(cstInfo.wkplace_tel);
 }
 
 // ===========================================================================

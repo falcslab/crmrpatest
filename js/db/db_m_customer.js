@@ -7,7 +7,7 @@ const m_customer = [
     cst_name_kana_lst: "テスト",
     sex: "1",
     birthday: "1999/01/01",
-    home_tel: "03-1111-2222",
+    home_tel: "03-1234-5678",
     mbl_tel: "080-3333-4444",
     mailaddr: "testtaro@testtaro.jp",
     post_cd: "111-1111",

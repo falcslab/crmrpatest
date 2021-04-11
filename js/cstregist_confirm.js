@@ -10,11 +10,11 @@ $(document).ready(function () {
   getCstInfo(prms.get('cstId')).catch(() => {
     window.location.href = "./index.html"
   });
-  $("#cstregistconfirm").on("click", function () {
+  $("#cstregist_confirm").on("click", function () {
     // ボタン連打対策
-    $("#cstregistconfirm").prop("disabled", true);
+    $("#cstregist_confirm").prop("disabled", true);
     // 顧客情報確認画面へ
-    window.location.href = "./cstregist_confirm.html" + "?cstId=" + prms.get('cstId');
+    window.location.href = "./custregist_confirm.html";
   });
   $("#backtosearchresult").on("click", function () {
     // 名寄せ検索結果画面に戻る
