@@ -10,7 +10,7 @@ function initdb() {
     pref: "pref_cd, pref_name",
     customer:
       "cst_id, cst_name_fst, cst_name_lst, cst_name_kana_fst, cst_name_kana_lst, birthday, home_tel, mbl_tel",
-    tmp: "func_id, cst_id",
+    tmp: "++id, func_id, cst_id",
   });
 }
 
@@ -74,12 +74,14 @@ async function cstsearch(
     });
 
   // 検索結果画面に紐付くtmpデータを削除
-  await db.tmp.bulkDelete(FUNC_ID_CSTREGIST_RESULT).catch((error) => {
-    console.log(error);
-  });
+  await db.tmp.where({ "func_id": FUNC_ID_CSTREGIST_RESULT })
+    .delete().catch((error) => {
+      console.log(error);
+    });
 
   if (result.length != 0) {
     for (let res of result) {
+      console.log(res)
       // 検索結果画面のIDをセット
       res.func_id = FUNC_ID_CSTREGIST_RESULT;
       await db.tmp.put(res).catch((error) => {

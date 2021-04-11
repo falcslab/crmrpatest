@@ -17,59 +17,31 @@
 </head>
 
 <body>
-  <div class="contents">
+  <div class="wrapper">
+    <div id="header"></div>
     <div class="crmtest">
-      <div class="title">
-        <h1 class="title">顧客管理システム</h1>
-        <h2 class="title">ログイン</h2>
-      </div>
+      <h2 class="title">ログイン</h2>
       <div id="errorinfo"></div>
-      <div class="wrapper">
-        <dl>
-          <dd class="loginuser">
-            <input type="text" id="loginid" class="form-control" placeholder="ログインID" autocomplete="off"
-              value="admin" />
-          </dd>
-          <dd class="loginpw">
-            <input type="password" id="loginpw" class="form-control" placeholder="パスワード" autocomplete="off"
-              value="admin" />
-          </dd>
-        </dl>
-          <dl class="btn">
-            <dd class="btnlogin">
-              <button
-                type="button"
-                class="btn btn-primary btn-block"
-                id="btnlogin"
-              >
-                ログイン
-              </button>
-            </dd>
-          </dl>
-        </div>
-        <!-- <div class="info">
-        <div class="infoBox">
-          <span>
-            当サイトは弊社RPA学習用教材の題材として用意されたサイトです。<br />
-            ご利用にあたっては弊社教材の学習以外にも自由にご利用いただいて構いませんが、当サイトをご利用いただくことで<a
-              href="">利用規約</a>にご同意いただいたものとみなしますので、ご留意ください。<br /><br />
-            なお、当サイトは以下の仕様で動作するものとします。
-            <ul>
-              <li>当サイトの対応ブラウザは<b>Chrome,Firefox,Edge</b>です。<b>IEは非対応</b>です。</li>
-              <li><b>出発駅と到着駅が同一路線にある場合のみ</b>検索ヒットします。<br />（例1）新宿 → （JR山手線） → 原宿<br />（例2）渋谷 → （東京メトロ銀座線）
-                → 銀座</li>
-              <li>出発駅、到着駅に存在しない駅名を入れるとエラーとなります。<br />駅名が空白の場合も同様です。</li>
-              <li>運賃、条件、手段の選択内容は検索結果に影響はありません。</li>
-              <li>検索結果画面の運賃、所要時間は実際のものとは異なります。</li>
-              </li>
-          </span>
-        </div>
-      </div> -->
-      </div>
+      <dl>
+        <dd class="loginuser">
+          <input type="text" id="loginid" class="form-control" placeholder="ログインID" autocomplete="off" value="admin" />
+        </dd>
+        <dd class="loginpw">
+          <input type="password" id="loginpw" class="form-control" placeholder="パスワード" autocomplete="off"
+            value="admin" />
+        </dd>
+      </dl>
+      <dl class="btn">
+        <dd class="btn">
+          <button type="button" class="btn btn-primary btn-block" id="btnlogin">
+            ログイン
+          </button>
+        </dd>
+      </dl>
     </div>
-    <!-- <footer class="container">
-      <p class="copyright">Copyright © 2021 Falcs All Rights Reserved.</p>
-    </footer> -->
+  </div>
+  </div>
+  <div id="footer"></div>
   </div>
 </body>
 

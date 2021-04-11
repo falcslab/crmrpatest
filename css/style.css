@@ -1,7 +1,5 @@
-.contents {
-    text-align: center;
+header {
     background-color: rgba(13, 110, 253, 0.3);
-    position: fixed;
     width: 100%;
     height: 120px;
 }
@@ -9,11 +7,12 @@
 .crmtest {
     max-width: 1300px;
     margin: 0 auto 20px;
+    /* overflow: scroll; */
 }
 
 .title {
-    margin: 30px auto 50px;
     text-align: center;
+    padding: 20px 0;
 }
 
 .boxError {
@@ -29,7 +28,10 @@
 }
 
 .wrapper {
-    margin-top: 60px;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 120px;
+    box-sizing: border-box;
 }
 
 .loginuser {
@@ -44,7 +46,7 @@
 
 .menu_holizon {
     margin-bottom: 50px;
-    /* float: left; */
+    text-align: center;
 }
 
 .cstlabel {
@@ -55,27 +57,17 @@
     float: left
 }
 
-.transitApp>.info {
-    margin: 0 auto;
-    width: 500px;
-    float: left;
-}
-
 .infobox {
     background-color: linen;
     border: 2px solid #000;
     padding: 10px 15px;
 }
 
-.radio {
-    vertical-align: middle;
-    width: 30px;
-}
-
-.radiotext {
-    vertical-align: middle;
+.radiolabel {
+    /* vertical-align: middle;
     width: 50px;
-    height: 30px;
+    height: 30px; */
+    margin: 0 30px;
 }
 
 .chkbox {
@@ -89,48 +81,33 @@
     height: 30px;
 }
 
-.btn {
+dl.btn {
     width: 100%;
+    margin-top: 30px;
 }
 
-.btnlogin {
-    width: 20%;
-    margin: 15px auto;
-}
-
-.backtomain {
-    width: 20%;
-    float: left;
-    margin: 0 30px;
-}
-
-.btncstsearch {
-    width: 20%;
-    float: left;
-    margin: 0 30px;
+dd.btn {
+    margin: 0 auto;
+    display: inline-block;
 }
 
 .ui-helper-hidden-accessible {
     display: none;
 }
 
-button#btnSearch {
-    width: 40%;
-    margin: 0 auto;
-}
-
-button#btnBack {
-    width: 40%;
-    margin: 0 auto;
-}
-
 .check:not(:checked) {
     background-color: #fff !important;
 }
 
-/* footer {
+footer {
     margin: 2em auto 0 auto;
     padding: 20px 0;
     background-color: #2e2e2e;
     color: #999;
-} */
+    bottom: 0;
+    width: 100%;
+}
+
+.copyright {
+    text-align: center;
+}

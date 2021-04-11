@@ -10,7 +10,7 @@ $(document).ready(function () {
   //   window.location.href = "./custregist_input.html";
   // });
   $("#backtosearchresult").on("click", function () {
-    // メインメニューに戻る
-    window.location.href = "./main.html";
+    // 名寄せ検索結果画面に戻る
+    window.location.href = "./cstregist_searchresult.html";
   });
 });

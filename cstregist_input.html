@@ -1,163 +1,146 @@
 <html lang="ja">
-  <link rel="stylesheet" href="./css/style.css" />
-  <link rel="stylesheet" href="./css/bootstrap-5.0.0/bootstrap.min.css" />
-  <script
-    type="text/javascript"
-    src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"
-  ></script>
-  <script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
-  <script
-    type="text/javascript"
-    src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"
-  ></script>
-  <script type="text/javascript" src="./js/cstregist_input.js"></script>
-  <script type="text/javascript" src="./js/db/db_m_pref.js"></script>
-  <script type="text/javascript" src="./js/db/db_m_customer.js"></script>
-  <script type="text/javascript" src="./js/common.js"></script>
-  <script type="text/javascript" src="./js/db/accessdb.js"></script>
+<link rel="stylesheet" href="./css/style.css" />
+<link rel="stylesheet" href="./css/bootstrap-5.0.0/bootstrap.min.css" />
+<script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
+<script type="text/javascript" src="./js/cstregist_input.js"></script>
+<script type="text/javascript" src="./js/db/db_m_user.js"></script>
+<script type="text/javascript" src="./js/db/db_m_pref.js"></script>
+<script type="text/javascript" src="./js/db/db_m_customer.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/db/accessdb.js"></script>
 
-  <head>
-    <meta charset="utf-8" />
-    <title>顧客管理テスト</title>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <title>顧客管理テスト</title>
+</head>
 
-  <body>
-    <div class="contents">
-      <div class="crmtest">
-        <div class="title">
-          <h1 class="title"><a href="./main.html">顧客管理システム</a></h1>
-          <h2 class="title">顧客登録 顧客情報入力</h2>
-        </div>
-        <div class="wrapper">
-          <div id="errorinfo"></div>
-          <dl>
-            <dt class="cstlabel form-group form-inline">
-              <label for="cst_name_lst" class="head">氏名（姓）</label>
-            </dt>
-            <dd class="">
-              <input
-                type="text"
-                class="form-control"
-                id="cst_name_lst"
-                placeholder="(例) 山田"
-                required="required"
-                value="テスト"
-              />
-            </dd>
-            <dt class="cstlabel form-group form-inline">
-              <label for="cst_name_fst" class="head">氏名（名）</label>
-            </dt>
-            <dd class="">
-              <input
-                type="text"
-                class="form-control"
-                id="cst_name_fst"
-                placeholder="(例) 太郎"
-                required="required"
-                value="太郎"
-              />
-            </dd>
-            <dt class="cstlabel form-group form-inline">
-              <label for="cst_name_kana_lst" class="head">氏名カナ（姓）</label>
-            </dt>
-            <dd class="">
-              <input
-                type="text"
-                class="form-control"
-                id="cst_name_kana_lst"
-                placeholder="(例) ヤマダ"
-                required="required"
-              />
-            </dd>
-            <dt class="cstlabel form-group form-inline">
-              <label for="cst_name_kana_fst" class="head">氏名カナ（名）</label>
-            </dt>
-            <dd class="">
-              <input
-                type="text"
-                class="form-control"
-                id="cst_name_kana_fst"
-                placeholder="(例) タロウ"
-                required="required"
-              />
-            </dd>
-            <dt class="cstlabel form-group form-inline">
-              <label for="birthday" class="head">生年月日</label>
-            </dt>
-            <dd class="">
-              <input
-                type="text"
-                class="form-control"
-                id="birthday"
-                placeholder="1999/01/01"
-              />
-            </dd>
-            <dt class="cstlabel form-group form-inline">
-              <label for="home_tel" class="head">自宅電話番号</label>
-            </dt>
-            <dd class="">
-              <input
-                type="text"
-                class="form-control"
-                id="home_tel"
-                placeholder="03-1111-2222"
-              />
-            </dd>
-            <dt class="cstlabel form-group form-inline">
-              <label for="mbl_tel" class="head">携帯電話番号</label>
-            </dt>
-            <dd class="">
-              <input
-                type="text"
-                class="form-control"
-                id="mbl_tel"
-                placeholder="080-1111-2222"
-              />
-            </dd>
-          </dl>
-          <dl class="btn">
-            <dd class="backtomain">
-              <button
-                type="button"
-                class="btn btn-primary btn-block"
-                id="backtomain"
-              >
-                名寄せ検索結果画面に戻る
-              </button>
-            </dd>
-            <dd class="btncstsearch">
-              <button
-                type="button"
-                class="btn btn-primary btn-block"
-                id="btncstsearch"
-              >
-                確認
-              </button>
-            </dd>
-          </dl>
-        </div>
-        <!-- <div class="info">
-        <div class="infoBox">
-          <span>
-            当サイトは弊社RPA学習用教材の題材として用意されたサイトです。<br />
-            ご利用にあたっては弊社教材の学習以外にも自由にご利用いただいて構いませんが、当サイトをご利用いただくことで<a
-              href="">利用規約</a>にご同意いただいたものとみなしますので、ご留意ください。<br /><br />
-            なお、当サイトは以下の仕様で動作するものとします。
-            <ul>
-              <li>当サイトの対応ブラウザは<b>Chrome,Firefox,Edge</b>です。<b>IEは非対応</b>です。</li>
-              <li><b>出発駅と到着駅が同一路線にある場合のみ</b>検索ヒットします。<br />（例1）新宿 → （JR山手線） → 原宿<br />（例2）渋谷 → （東京メトロ銀座線）
-                → 銀座</li>
-              <li>出発駅、到着駅に存在しない駅名を入れるとエラーとなります。<br />駅名が空白の場合も同様です。</li>
-              <li>運賃、条件、手段の選択内容は検索結果に影響はありません。</li>
-              <li>検索結果画面の運賃、所要時間は実際のものとは異なります。</li>
-              </li>
-          </span>
-        </div>
-      </div> -->
-      </div>
+<body>
+  <div class="wrapper">
+    <div id="header"></div>
+    <div class="crmtest">
+      <h2 class="title">顧客情報入力</h2>
+      <div id="errorinfo"></div>
+      <dl>
+        <dt class="cstlabel form-group form-inline">
+          <label for="cst_name_lst" class="head">顧客ID</label>
+        </dt>
+        <dd class="">
+          <input type="text" readonly class="form-control-plaintext" class="form-control" id="cst_id" value="100000" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="cst_name_lst" class="head">氏名（姓）</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="cst_name_lst" placeholder="(例) 山田" required="required"
+            value="テスト" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="cst_name_fst" class="head">氏名（名）</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="cst_name_fst" placeholder="(例) 太郎" required="required"
+            value="太郎" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="cst_name_kana_lst" class="head">氏名カナ（姓）</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="cst_name_kana_lst" placeholder="(例) ヤマダ" required="required" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="cst_name_kana_fst" class="head">氏名カナ（名）</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="cst_name_kana_fst" placeholder="(例) タロウ" required="required" />
+        </dd>
+        <dt class="form-group form-inline">
+          <label for="birthday" class="head">性別</label>
+        </dt>
+        <dd class="radio">
+          <input class="check form-check-input" type="radio" name="type" id="man" value="" />
+          <span class="radiolabel">男</span>
+          <input class="check form-check-input" type="radio" name="type" id="woman" value="" />
+          <span class="radiolabel">女</span>
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="birthday" class="head">生年月日</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="birthday" placeholder="(例) 1999/01/01" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="home_tel" class="head">自宅電話番号</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="home_tel" placeholder="(例) 03-1111-2222" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="mbl_tel" class="head">携帯電話番号</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="mbl_tel" placeholder="(例) 080-1111-2222" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="mailaddr" class="head">メールアドレス</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="mailaddr" placeholder="(例) 080-1111-2222" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="post_cd" class="head">郵便番号</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="post_cd" placeholder="(例) 123-4567" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="post_cd" class="head">都道府県</label>
+        </dt>
+        <dd class="">
+          <select class="form-select" id="pref_cd" name="pref_cd"></select>
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="addr1" class="head">市区町村番地</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="addr1" placeholder="(例) 渋谷区渋谷1-1-1" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="addr2" class="head">建物名・号室</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="addr2" placeholder="(例) 渋谷マンション101号" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="wkplace_name" class="head">勤務先名</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="wkplace_name" placeholder="(例) テスト会社" />
+        </dd>
+        <dt class="cstlabel form-group form-inline">
+          <label for="wkplace_tel" class="head">勤務先名電話番号</label>
+        </dt>
+        <dd class="">
+          <input type="text" class="form-control" id="wkplace_tel" placeholder="(例) 03-1111-2222" />
+        </dd>
+      </dl>
+      <dl class="btn">
+        <dd class="btn">
+          <button type="button" class="btn btn-primary btn-block" id="backtosearchresult">
+            名寄せ検索結果画面に戻る
+          </button>
+        </dd>
+        <dd class="btn">
+          <button type="button" class="btn btn-primary btn-block" id="btncstsearch">
+            確認
+          </button>
+        </dd>
+      </dl>
     </div>
-    <!-- <footer class="container">
-    <p class="copyright">Copyright © 2021 Falcs All Rights Reserved.</p>
-  </footer> -->
-  </body>
+  </div>
+  </div>
+  <div id="footer"></div>
+</body>
+
 </html>
