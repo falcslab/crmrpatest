@@ -4,7 +4,8 @@
 <script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
-<script type="text/javascript" src="./js/custregist_searchresult.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/cstregist_searchresult.js"></script>
 <script type="text/javascript" src="./js/db/db_m_pref.js"></script>
 <script type="text/javascript" src="./js/db/db_m_customer.js"></script>
 <script type="text/javascript" src="./js/db/accessdb.js"></script>
@@ -23,58 +24,40 @@
       </div>
       <div class="wrapper">
         <div id="errorinfo"></div>
-        <dl>
-          <dt class="cstlabel form-group form-inline">
-            <label for="cst_name_lst" class="head">氏名（姓）</label>
-          </dt>
-          <dd class="">
-            <input type="text" class="form-control" id="cust_name_lst" placeholder="(例) 山田" required="required" />
-          </dd>
-          <dt class="cstlabel form-group form-inline">
-            <label for="cust_name_fst" class="head">氏名（名）</label>
-          </dt>
-          <dd class="">
-            <input type="text" class="form-control" id="cust_name_fst" placeholder="(例) 太郎" required="required" />
-          </dd>
-          <dt class="cstlabel form-group form-inline">
-            <label for="cst_name_kana_lst" class="head">氏名カナ（姓）</label>
-          </dt>
-          <dd class="">
-            <input type="text" class="form-control" id="cst_name_kana_lst" placeholder="(例) ヤマダ" required="required" />
-          </dd>
-          <dt class="cstlabel form-group form-inline">
-            <label for="cst_name_kana_fst" class="head">氏名カナ（名）</label>
-          </dt>
-          <dd class="">
-            <input type="text" class="form-control" id="cst_name_kana_fst" placeholder="(例) タロウ" required="required" />
-          </dd>
-          <dt class="cstlabel form-group form-inline">
-            <label for="birthday" class="head">生年月日</label>
-          </dt>
-          <dd class="">
-            <input type="text" class="form-control" id="birthday" placeholder="1999/01/01" />
-          </dd>
-          <dt class="cstlabel form-group form-inline">
-            <label for="home_tel" class="head">自宅電話番号</label>
-          </dt>
-          <dd class="">
-            <input type="text" class="form-control" id="home_tel" placeholder="03-1111-2222" />
-          </dd>
-          <dt class="cstlabel form-group form-inline">
-            <label for="mbl_tel" class="head">携帯電話番号</label>
-          </dt>
-          <dd class="">
-            <input type="text" class="form-control" id="mbl_tel" placeholder="080-1111-2222" />
-          </dd>
-        </dl>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+                <th>#</th>
+                <th>顧客ID</th>
+                <th>氏名（姓）</th>
+                <th>氏名（名）</th>
+                <th>氏名カナ（姓）</th>
+                <th>氏名カナ（名）</th>
+                <th>生年月日</th>
+                <th>自宅電話番号</th>
+                <th>携帯電話番号</th>
+              </tr>
+        </thead>
+        <tbody></tbody>
+        </table>
         <dl class="btn">
-          <dd class="btnlogin">
-            <button type="button" class="btn btn-primary btn-block" id="btncstsearch">
-              検索
+          <dd class="backtosearch">
+            <button
+              type="button"
+              class="btn btn-primary btn-block"
+              id="backtosearch">
+              名寄せ検索結果に戻る
+            </button>
+          </dd>
+          <dd class="btncstconfirm">
+            <button
+              type="button"
+              class="btn btn-primary btn-block"
+              id="btncstconfirm">
+              確認
             </button>
           </dd>
         </dl>
-      </div>
       <!-- <div class="info">
         <div class="infoBox">
           <span>

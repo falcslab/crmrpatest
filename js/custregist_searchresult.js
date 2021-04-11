@@ -1,4 +1,7 @@
 $(document).ready(function () {
+  initdb();
+  bulkputdb();
+
   $("#custregist").on("click", function () {
     // ボタン連打対策
     $("").prop("disabled", true);
