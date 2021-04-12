@@ -4,15 +4,7 @@ $(document).ready(function () {
 
   $("#custinquiry").on("click", function () {
     // ボタン連打対策
-    // $("#custinquiry").prop("disabled", true);
-    alert("custinquiry");
-    // login($("#loginid").val(), $("#loginpw").val())
-    //   .then(() => {
-    //     window.location.href = './main.html';
-    //   }).catch((error) => {
-    //     $("#btnlogin").prop("disabled", false);
-    //     console.log("ログインエラー")
-    //   })
+    $("#custinquiry").prop("disabled", true);
   });
   $("#custregist").on("click", function () {
     // ボタン連打対策
@@ -20,8 +12,10 @@ $(document).ready(function () {
     // 名寄せ検索画面へ
     window.location.href = "./cstregist_search.html";
   });
-  $("#appaprv").on("click", function () {
+  $("#appaprvsearch").on("click", function () {
     // ボタン連打対策
-    $("#appaprv").prop("disabled", true);
+    $("#appaprvsearch").prop("disabled", true);
+    // 申請承認画面へ
+    window.location.href = "./appaprv_search.html";
   });
 });

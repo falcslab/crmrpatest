@@ -3,15 +3,21 @@ const cstListTag =
   "<tr><th>{$no}</th><td><a href='./cstregist_input.html?cstId={$cstId}' name='cstIdlink'>{$cstId}</button></td><td>{$cstNameLst}</td><td>{$cstNameFst}</td>" +
   "<td>{$cstNameKanaLst}</td><td>{$cstNameKanaFst}</td><td>{$birthDay}</td>" +
   "<td>{$homeTel}</td><td>{$mblTel}</td></tr>";
-const prefTag = "<option value={$prefCd}>{$prefName}</option>"
+const appTableTag = "<table class='table table-striped appList'><thead><tr><th>#</th><th>申請ID</th><th>承認区分</th><th>申請ステータス</th>" +
+  "<th>申請ユーザー</th><th>申請日</th></tr></thead><tbody></tbody></table>"
+const appListTag = "<tr><th>{$no}</th><td><a href='./appaprv_confirm.html?appId={$appId}' name='appIdlink'>{$appId}</button></td><td>{$aprvDivName}</td>" +
+  "<td>{$appStatusName}</td><td>{$appUserName}</td><td>{$appDate}</td>";
+const prefTag =
+  "<option id='prefcd_{$prefCd}' value={$prefCd}>{$prefName}</option>";
 
 function initdb() {
   db.version(1).stores({
-    user: "&login_id, login_name, login_pw",
-    pref: "pref_cd, pref_name",
+    user: "&login_id, login_pw",
+    pref: "&pref_cd",
     customer:
-      "cst_id, cst_name_fst, cst_name_lst, cst_name_kana_fst, cst_name_kana_lst, birthday, home_tel, mbl_tel",
-    tmp: "++id, func_id, cst_id",
+      "&cst_id, cst_name_fst, cst_name_lst, cst_name_kana_fst, cst_name_kana_lst, birthday, home_tel, mbl_tel",
+    app: "&app_id",
+    tmp: "++id, func_id, cst_id, login_id",
   });
 }
 
@@ -29,11 +35,53 @@ function bulkputdb() {
   });
 }
 
+async function getUserData(userId) {
+  return await db.user.get({ login_id: userId })
+    .catch((error) => {
+      throw new Error("該当ユーザーなし");
+    })
+}
+
 async function login(loginid, loginpw) {
-  const loginuser = await db.user.get({ login_id: loginid, login_pw: loginpw });
-  if (loginuser == null) {
-    throw new Error("ログインエラー");
-  }
+  const loginuser = await db.user
+    .get({ login_id: loginid, login_pw: loginpw })
+    .catch(() => {
+      throw new Error("該当ユーザーなし");
+    });
+  db.tmp
+    .add({
+      func_id: FUNC_ID_LOGIN,
+      login_id: loginuser.login_id,
+      login_name: loginuser.login_name,
+    })
+    .catch((error) => {
+      // tmpに複数レコードログイン情報がある場合はログインエラー
+      throw new Error("ログインエラー");
+    });
+}
+
+async function logincheck() {
+  const loginInfo = await db.tmp
+    .get({
+      func_id: FUNC_ID_LOGIN,
+    })
+    .catch(() => {
+      // tmpにログイン情報がない場合はログインエラー
+      throw new Error("ログインエラー");
+    });
+
+  return loginInfo;
+}
+
+async function delTmpData(funcId) {
+  await db.tmp
+    .where({
+      func_id: funcId,
+    })
+    .delete()
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 // 名寄せ検索
@@ -75,8 +123,10 @@ async function cstsearch(
     });
 
   // 検索結果画面に紐付くtmpデータを削除
-  await db.tmp.where({ "func_id": FUNC_ID_CSTREGIST_SEARCHRESULT })
-    .delete().catch((error) => {
+  await db.tmp
+    .where({ func_id: FUNC_ID_CSTREGIST_SEARCHRESULT })
+    .delete()
+    .catch((error) => {
       console.error(error);
     });
 
@@ -128,36 +178,92 @@ async function getCstSearchResult() {
 }
 
 async function getPrefList() {
-  let prefListTag = ""
-  const pref = await db.pref.toArray()
+  let prefListTag = "";
+  const pref = await db.pref.toArray();
   for (let pf of pref) {
-    let tmpSelectPrefTag = prefTag
-    tmpSelectPrefTag = tmpSelectPrefTag.replace("{$prefCd}", pf.pref_cd);
+    let tmpSelectPrefTag = prefTag;
+    tmpSelectPrefTag = tmpSelectPrefTag.replaceAll("{$prefCd}", pf.pref_cd);
     tmpSelectPrefTag = tmpSelectPrefTag.replace("{$prefName}", pf.pref_name);
-    prefListTag = prefListTag + tmpSelectPrefTag
+    prefListTag = prefListTag + tmpSelectPrefTag;
   }
   $("#pref_list").append(prefListTag);
-
 }
 
 async function getCstInfo(cstId) {
-  const cstInfo = await db.customer.get({ cst_id: cstId })
+  const cstInfo = await db.customer.get({ cst_id: cstId });
   if (cstInfo == null) {
     throw new Error("該当顧客情報なし");
   }
   // パラメータ入力
-  setCstParam(cstInfo)
+  setCstParam(cstInfo);
+}
+
+// 顧客入力完了
+async function setAppInfo() {
+  // 申請テーブルに登録
+  const tmpCstInfo = await db.tmp
+    .get({ func_id: FUNC_ID_CSTREGIST_CONFIRM })
+    .catch((error) => {
+      throw new Error("該当顧客入力情報なし");
+    });
+
+  // 申請テーブルからapp_idのMax値を取得
+  let maxAppId = c_appId;
+  await db.app
+    .orderBy("app_id")
+    .last()
+    .then((app) => {
+      maxAppId = app.app_id;
+    })
+    .catch((error) => {
+      // 何もしない
+    });
+
+  // 申請テーブル登録
+  await db.app
+    .put({
+      app_id: Number(maxAppId) + 1,
+      cst_id: tmpCstInfo.cst_id,
+      cst_name_lst: $("#cst_name_lst").val(),
+      cst_name_fst: $("#cst_name_fst").val(),
+      cst_name_kana_lst: $("#cst_name_kana_lst").val(),
+      cst_name_kana_fst: $("#cst_name_kana_fst").val(),
+      sex: $("input:radio[name='radio_sex']:checked").val(),
+      birthday: $("#birthday").val(),
+      home_tel: $("#home_tel").val(),
+      mbl_tel: $("#mbl_tel").val(),
+      mailaddr: $("#mailaddr").val(),
+      post_cd: $("#post_cd").val(),
+      pref_cd: $("#pref_list>option:selected").val(),
+      addr1: $("#addr1").val(),
+      addr2: $("#addr2").val(),
+      wkplace_name: $("#wkplace_name").val(),
+      wkplace_tel: $("#wkplace_tel").val(),
+      app_status: APP_BEFAPPR,
+      app_date: formatDate(),
+      app_user_id: c_loginId,
+      aprv_div: APPDIV_CUSTOMERREGIST,
+    })
+    .catch((error) => {
+      throw new Error("顧客情報更新失敗");
+    });
+
+  // 顧客入力確認画面用の一時保存データを削除
+  delTmpData(FUNC_ID_CSTREGIST_CONFIRM);
+  // 名寄せ検索結果画面用の一時保存データを削除
+  delTmpData(FUNC_ID_CSTREGIST_SEARCHRESULT);
 }
 
 async function getTmpCstInfo(cstId) {
-  const tmpCstInfo = await db.tmp.get({ func_id: FUNC_ID_CSTREGIST_CONFIRM, cst_id: cstId })
+  const tmpCstInfo = await db.tmp
+    .get({ func_id: FUNC_ID_CSTREGIST_CONFIRM })
     .catch((error) => {
       if (tmpCstInfo == null) {
         throw new Error("該当顧客入力情報なし");
       }
-    })
+    });
   // パラメータ入力
-  setCstParam(tmpCstInfo)
+  setCstParam(tmpCstInfo);
 }
 
 // 顧客入力・確認　パラメータ入力
@@ -168,264 +274,124 @@ function setCstParam(cstInfo) {
   $("#cst_name_kana_lst").val(cstInfo.cst_name_kana_lst);
   $("#cst_name_kana_fst").val(cstInfo.cst_name_kana_fst);
   if (cstInfo.sex == "1") {
-    $("input:radio[name='radio_sex']").val(['man']);
+    $("input:radio[name='radio_sex']").val(["1"]);
   } else {
-    $("input:radio[name='radio_sex']").val(['woman']);
+    $("input:radio[name='radio_sex']").val(["2"]);
   }
   $("#birthday").val(cstInfo.birthday);
   $("#home_tel").val(cstInfo.home_tel);
   $("#mbl_tel").val(cstInfo.mbl_tel);
   $("#mailaddr").val(cstInfo.mailaddr);
   $("#post_cd").val(cstInfo.post_cd);
-  $("#pref_list option[value='" + cstInfo.pref_cd + "']").prop("selected", true);
+  $("#pref_list>option[value='" + cstInfo.pref_cd + "']").prop(
+    "selected",
+    true
+  );
   $("#addr1").val(cstInfo.addr1);
   $("#addr2").val(cstInfo.addr2);
   $("#wkplace_name").val(cstInfo.wkplace_name);
   $("#wkplace_tel").val(cstInfo.wkplace_tel);
 }
 
+// 顧客入力確認画面表示
 async function setTmpCstInfo(cstId) {
   // 検索結果画面に紐付くtmpデータを削除
-  await db.tmp.where({ "func_id": FUNC_ID_CSTREGIST_CONFIRM })
-    .delete().catch((error) => {
+  await db.tmp
+    .where({ func_id: FUNC_ID_CSTREGIST_CONFIRM })
+    .delete()
+    .catch((error) => {
       console.error(error);
     });
-  await db.tmp.put({
-    func_id: FUNC_ID_CSTREGIST_CONFIRM,
-    cst_id: cstId,
-    cst_name_lst: $("#cst_name_lst").val(),
-    cst_name_fst: $("#cst_name_fst").val(),
-    cst_name_kana_lst: $("#cst_name_kana_lst").val(),
-    cst_name_kana_fst: $("#cst_name_kana_fst").val(),
-    sex: "1", //$("#sex").val(),
-    birthday: $("#birthday").val(),
-    home_tel: $("#home_tel").val(),
-    mbl_tel: $("#mbl_tel").val(),
-    mailaddr: $("#mailaddr").val(),
-    post_cd: $("#post_cd").val(),
-    pref_cd: "", //$("#pref_list").val(),
-    addr1: $("#addr1").val(),
-    addr2: $("#addr2").val(),
-    wkplace_name: $("#wkplace_name").val(),
-    wkplace_tel: $("#wkplace_tel").val(),
-    // ステータス
-    // 申請No
-    // 申請日
-    // 申請ユーザーID
-    // 承認区分
-    // 画面区分
-  })
-    .catch((error) => {
-      throw new Error("顧客情報更新失敗");
+  await db.tmp
+    .put({
+      func_id: FUNC_ID_CSTREGIST_CONFIRM,
+      cst_id: cstId,
+      cst_name_lst: $("#cst_name_lst").val(),
+      cst_name_fst: $("#cst_name_fst").val(),
+      cst_name_kana_lst: $("#cst_name_kana_lst").val(),
+      cst_name_kana_fst: $("#cst_name_kana_fst").val(),
+      sex: $("input:radio[name='radio_sex']:checked").val(),
+      birthday: $("#birthday").val(),
+      home_tel: $("#home_tel").val(),
+      mbl_tel: $("#mbl_tel").val(),
+      mailaddr: $("#mailaddr").val(),
+      post_cd: $("#post_cd").val(),
+      pref_cd: $("#pref_list>option:selected").val(),
+      addr1: $("#addr1").val(),
+      addr2: $("#addr2").val(),
+      wkplace_name: $("#wkplace_name").val(),
+      wkplace_tel: $("#wkplace_tel").val(),
     })
+    .catch((error) => {
+      throw new Error("一時テーブルへの顧客データ登録失敗");
+    });
 }
 
-// ===========================================================================
+async function getNewCstId() {
+  return await db.app
+    .orderBy("app_id")
+    .last()
+    .catch((error) => {
+      throw new Error("申請ID取得エラー");
+    });
+}
 
-async function getDbStationByStNm(stFrNm, stToNm) {
-  let stFrArr = [];
-  let stToArr = [];
+// 申請情報検索
+async function appSearch(appId, appDateFr, appDateTo) {
   let result = [];
 
-  let errorbox =
-    '<div id="searchError" class="boxError" ><span>{$errormsg}</span></div>';
-  let errormsg = "";
+  $("table").remove();
 
-  // tmpテーブルをtruncate
-  await db.tmp.clear();
-
-  // エラーメッセージを消す
-  $("div#searchError").remove();
-
-  // 入力チェック
-  if (stFrNm == "") {
-    errormsg = makeErrorMsg(errormsg, "出発地を入力してください。");
-  }
-  if (stToNm == "") {
-    errormsg = makeErrorMsg(errormsg, "到着地を入力してください。");
-  }
-  if (errormsg != "") {
-    returnError(errorbox, errormsg);
-    throw new Error("入力エラー");
+  if (appDateFr > appDateTo) {
+    throw new Error("日付の大小が不正");
   }
 
-  // stFrNm（出発駅名）に紐つく駅一覧を取得
-  await db.station
-    .where("station_name")
-    .equals(stFrNm.trim())
-    .each((station) => {
-      const tmpStArr = {
-        station_cd: station.station_cd,
-        line_cd: station.line_cd,
-        station_name: station.station_name,
-      };
-      stFrArr.push(tmpStArr);
-    });
-
-  if (stFrArr.length == 0) {
-    errormsg = errormsg + "該当する出発地が見つかりませんでした。";
+  let appList = await db.app.toArray()
+  if (appList.length == 0) {
+    throw new Error("申請データなし");
   }
 
-  // stToNm（到着駅名）に紐つく駅一覧を取得
-  await db.station
-    .where("station_name")
-    .equals(stToNm.trim())
-    .each((station) => {
-      const tmpToArr = {
-        station_cd: station.station_cd,
-        line_cd: station.line_cd,
-        station_name: station.station_name,
-      };
-      stToArr.push(tmpToArr);
-    });
-
-  if (stToArr.length == 0) {
-    errormsg = makeErrorMsg(errormsg, "該当する到着地が見つかりませんでした。");
-  }
-  if (errormsg != "") {
-    returnError(errorbox, errormsg);
-    throw new Error("到着地エラー");
-  }
-
-  for (const stFr of stFrArr) {
-    for (const stTo of stToArr) {
-      // 出発駅の路線上に到着駅が存在するかチェック
-      const resLineBySt = await db.join.get({
-        line_cd: stFr.line_cd,
-        station_cd1: stTo.station_cd,
-      });
-
-      if (resLineBySt == null) {
-        continue;
+  for (let ap of appList) {
+    if (appId != "") {
+      if (ap.app_id == appId) {
+        result.push(ap);
       }
-
-      // 路線名を検索
-      const resLine = await db.line.get({ line_cd: stFr.line_cd });
-      if (resLine == null) {
-        continue;
+    } else {
+      if (appDateFr != "" && appDateTo != "") {
+        if (ap.app_date >= appDateFr && ap.app_date <= appDateTo) {
+          result.push(ap);
+        }
       }
-
-      // 路線名を配列に追加
-      const lineNm = resLine.line_name;
-
-      // 運賃,所要時間,到着駅までの駅数を配列に追加
-      const [fare, reqTime] = calc(stFr.station_cd, stTo.station_cd);
-
-      // 到着時間計算
-      let dt = new Date(
-        $("select#y").val(),
-        $("select#m").val(),
-        $("select#d").val(),
-        $("select#hh").val(),
-        $("select#mm").val()
-      );
-      dt.setMinutes(dt.getMinutes() + reqTime);
-
-      // 検索画面の各入力項目をセット
-      const searchDate =
-        $("select#y").val() +
-        "年" +
-        $("select#m").val() +
-        "月" +
-        $("select#d").val() +
-        "日";
-      const searchTime =
-        $("select#hh").val() + "時" + $("select#mm").val() + "分";
-      const depTime = $("select#hh").val() + ":" + $("select#mm").val();
-      const arvTime =
-        ("00" + dt.getHours()).slice(-2) +
-        ":" +
-        ("00" + dt.getMinutes()).slice(-2);
-
-      // 【未対応】ラジオボタンの選択によって末尾の文言変更
-
-      result.push(stFr.station_cd);
-
-      // tmpテーブルに検索結果を保存
-      await db.tmp
-        .put({
-          line_cd: stFr.line_cd,
-          line_name: lineNm,
-          station_name_fr: stFr.station_name,
-          station_name_to: stTo.station_name,
-          search_date: searchDate,
-          search_time: searchTime,
-          departure: depTime,
-          arrive: arvTime,
-          req_time: reqTime,
-          fare: fare,
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     }
   }
-
-  // 路線名を配列に追加
   if (result.length == 0) {
-    // 検索結果0件の場合
-    errormsg = makeErrorMsg(errormsg, "検索結果が0件でした。");
-    returnError(errorbox, errormsg);
     throw new Error("検索結果0件");
   }
-}
 
-// 運賃計算
-function calc(station_cd_fr, station_cd_to) {
-  const stcdfr = Number(station_cd_fr);
-  const tocdfr = Number(station_cd_to);
-
-  const stcnt = Math.abs(stcdfr - tocdfr);
-  const fare = basefare + stcnt * addfare;
-  const reqTime = stcnt * addBaseMinutes;
-
-  return [fare, reqTime];
-}
-
-function returnError(errorbox, errormsg) {
-  // ボタン連打対策
-  $("#btnSearch").prop("disabled", false);
-  $("div#errorinfo").append(errorbox.replace("{$errormsg}", errormsg));
-}
-
-function makeErrorMsg(errstr, errormsg) {
-  if (errstr != "") {
-    // 頭に改行を入れる
-    errstr = errstr + "<br/>";
-  }
-  errstr = errstr + errormsg;
-
-  return errstr;
-}
-
-// tmpテーブルから全件取得
-async function getTmpData() {
-  let tmpArr = [];
-
-  // awaitを入れないとforループが先に走ってしまい画面に結果が表示されない
-  await db.tmp.toArray().then((tmp) => {
-    tmpArr.push(tmp);
-  });
+  $("#appList").append(appTableTag);
 
   // 画面表示用にパラメータ変換
   let i = 0;
-  for (let tm of tmpArr[0]) {
+  for (let res of result) {
     // パラメータ置換
-    let tmpTag = routeTag;
-    tmpTag = tmpTag.replaceAll("{$routeNo}", i + 1);
-    tmpTag = tmpTag.replace("{$stTime}", tm.search_time);
-    tmpTag = tmpTag.replace("{$departure}", tm.departure);
-    tmpTag = tmpTag.replace("{$arrive}", tm.arrive);
-    tmpTag = tmpTag.replace("{$reqTime}", tm.req_time + "分");
-    tmpTag = tmpTag.replace("{$fare}", tm.fare);
+    let appUserName = ""
+    await getUserData(res.app_user_id)
+      .then((user) => {
+        appUserName = user.login_name
+      })
+    if (appUserName == "") {
+      break;
+    }
 
-    $("ul#rtList").append(tmpTag);
+    let tmpTag = appListTag;
+    tmpTag = tmpTag.replace("{$no}", i + 1);
+    tmpTag = tmpTag.replaceAll("{$appId}", res.app_id);
+    tmpTag = tmpTag.replace("{$aprvDivName}", getAppDivName(res.aprv_div));
+    tmpTag = tmpTag.replace("{$appStatusName}", getAppStatusName(res.app_status));
+    tmpTag = tmpTag.replace("{$appUserName}", appUserName);
+    tmpTag = tmpTag.replace("{$appDate}", res.app_date);
 
-    $("span#searchDate").text(tm.search_date);
-    $("span#searchTime").text(tm.search_time);
-    $("span#route" + (i + 1) + "disp").text(
-      tm.station_name_fr + " → （" + tm.line_name + "） → " + tm.station_name_to
-    );
+    $("tbody").append(tmpTag);
     i++;
   }
 }

@@ -1,6 +1,10 @@
 $(document).ready(function () {
   initdb();
-  bulkputdb();
+
+  $('#birthday').datepicker({
+    language: 'ja',
+    format: 'yyyy/mm/dd'
+  });
 
   $("#btncstsearch").on("click", function () {
     // ボタン連打対策

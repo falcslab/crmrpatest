@@ -4,12 +4,12 @@
 <script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
-<script type="text/javascript" src="./js/common.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 <script type="text/javascript" src="./js/db/db_m_user.js"></script>
 <script type="text/javascript" src="./js/db/db_m_pref.js"></script>
 <script type="text/javascript" src="./js/db/db_m_customer.js"></script>
 <script type="text/javascript" src="./js/db/accessdb.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
 
 <head>
   <meta charset="utf-8" />
@@ -19,25 +19,30 @@
 <body>
   <div class="wrapper">
     <div id="header"></div>
-    <div class="crmtest">
-      <h2 class="title">メインメニュー</h2>
+    <div class="inputview">
+      <div class="display-5 subtitle">メインメニュー</div>
       <div id="errorinfo"></div>
 
-      <dl>
-        <dd class="menu_holizon">
-          <input type="button" class="menu" id="custinquiry" value="顧客照会" />
-        </dd>
-        <dd class="menu_holizon">
-          <input type="button" class="menu" id="custregist" value="顧客登録" />
-        </dd>
-        <dd class="menu_holizon">
-          <input type="button" class="menu" id="appaprv" value="申請承認" />
-        </dd>
-      </dl>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">メニュー一覧</h5>
+          <p class="card-text">サンプルメニューです。</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <a href="#" id="custinquiry">顧客照会</a>
+          </li>
+          <li class="list-group-item">
+            <a href="#" id="custregist">顧客登録</a>
+          </li>
+          <li class="list-group-item">
+            <a href="#" id="appaprvsearch">申請承認</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
   <div id="footer"></div>
-  </div>
 </body>
 
 </html>
