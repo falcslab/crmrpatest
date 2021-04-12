@@ -5,7 +5,7 @@ $(document).ready(function () {
   // const url = new URL(window.location.href);
   // const prms = url.searchParams;
 
-  getNewCstId()
+  getNewAppId()
     .then((app) => {
       // 発行された申請IDを画面表示
       $("#newappid").html("<b>" + app.app_id + "</b>");

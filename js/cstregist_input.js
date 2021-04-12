@@ -23,7 +23,7 @@ $(document).ready(function () {
     // checkCstParam()
     // .then (() =>{
     // tmpに顧客情報入力画面の各パラメータを一時保存
-    setTmpCstInfo(prms.get("cstId"))
+    setTmpCstInfo(prms.get("cstId"), FUNC_ID_CSTREGIST_CONFIRM)
       .then(() => {
         // 顧客情報確認画面へ
         window.location.href =

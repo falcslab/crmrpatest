@@ -5,12 +5,24 @@ $(document).ready(function () {
   const url = new URL(window.location.href);
   const prms = url.searchParams;
 
-  getPrefList().then(() => {
-    getAppInfo(prms.get("appId")).catch((error) => {
-      // エラーメッセージ表示させる？
-      // window.location.href = "./index.html";
+  // tmpに申請情報確認画面の各パラメータを一時保存
+
+  getPrefList()
+    .then(() => {
+      getAppInfo(prms.get("appId"))
+        .then((app) => {
+          setTmpAppInfo(prms.get("appId"), FUNC_ID_APP_CONFIRM)
+            .catch((error) => {
+              // エラーメッセージ表示させる？
+            })
+        }).catch((error) => {
+          // エラーメッセージ表示させる？
+          // window.location.href = "./index.html";
+        });
+    })
+    .catch((error) => {
+      window.location.href = "./index.html";
     });
-  });
 
   $("#appaprv_complete").on("click", function () {
     // ボタン連打対策

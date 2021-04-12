@@ -35,6 +35,9 @@ function bulkputdb() {
   });
 }
 
+// ===============================================================
+// userIdに紐つくユーザー情報を取得
+// ===============================================================
 async function getUserData(userId) {
   return await db.user.get({ login_id: userId })
     .catch((error) => {
@@ -42,6 +45,9 @@ async function getUserData(userId) {
     })
 }
 
+// ===============================================================
+// ログイン実施
+// ===============================================================
 async function login(loginid, loginpw) {
   const loginuser = await db.user
     .get({ login_id: loginid, login_pw: loginpw })
@@ -60,6 +66,9 @@ async function login(loginid, loginpw) {
     });
 }
 
+// ===============================================================
+// ログインデータがtmpテーブルに存在するかチェック
+// ===============================================================
 async function logincheck() {
   const loginInfo = await db.tmp
     .get({
@@ -73,6 +82,9 @@ async function logincheck() {
   return loginInfo;
 }
 
+// ===============================================================
+// func_cdに紐つくtmpテーブルのデータを削除
+// ===============================================================
 async function delTmpData(funcId) {
   await db.tmp
     .where({
@@ -84,8 +96,10 @@ async function delTmpData(funcId) {
     });
 }
 
-// 名寄せ検索
-async function cstsearch(
+// ===============================================================
+// 名寄せ検索を実施してtmpテーブルに一時保存
+// ===============================================================
+async function cstSearch(
   cstNameFst,
   cstNameLst,
   cstNameKanaFst,
@@ -143,6 +157,9 @@ async function cstsearch(
   }
 }
 
+// ===============================================================
+// 名寄せ検索結果をtmpテーブルから取得して画面に表示
+// ===============================================================
 async function getCstSearchResult() {
   let tmpArr = [];
 
@@ -177,6 +194,9 @@ async function getCstSearchResult() {
   }
 }
 
+// ===============================================================
+// 都道府県リストを取得して画面のプルダウンにセット
+// ===============================================================
 async function getPrefList() {
   let prefListTag = "";
   const pref = await db.pref.toArray();
@@ -198,7 +218,63 @@ async function getCstInfo(cstId) {
   setCstParam(cstInfo);
 }
 
+// ===============================================================
+// 申請情報（顧客データ）を顧客マスタに登録
+// 申請情報確認画面⇒承認で実施
+// ===============================================================
+async function setCstInfo(cstId) {
+  const tmpAppInfo = await db.tmp
+    .get({ func_id: FUNC_ID_APP_CONFIRM })
+    .catch((error) => {
+      throw new Error("該当申請情報なし");
+    });
+
+  // 顧客マスタに更新 or 登録
+  if (tmpAppInfo.cst_id == "") {
+    cstId = await getNewCstId()
+  } else {
+    cstId = tmpAppInfo.cst_id
+  }
+
+  await db.customer
+    .put({
+      cst_id: cstId,
+      cst_name_lst: tmpAppInfo.cst_name_lst,
+      cst_name_fst: tmpAppInfo.cst_name_fst,
+      cst_name_kana_lst: tmpAppInfo.cst_name_kana_lst,
+      cst_name_kana_fst: tmpAppInfo.cst_name_kana_fst,
+      sex: tmpAppInfo.sex,
+      birthday: tmpAppInfo.birthday,
+      home_tel: tmpAppInfo.home_tel,
+      mbl_tel: tmpAppInfo.mbl_tel,
+      mailaddr: tmpAppInfo.mailaddr,
+      post_cd: tmpAppInfo.post_cd,
+      pref_cd: tmpAppInfo.pref_cd,
+      addr1: tmpAppInfo.addr1,
+      addr2: tmpAppInfo.addr2,
+      wkplace_name: tmpAppInfo.wkplace_name,
+      wkplace_tel: tmpAppInfo.wkplace_tel,
+    })
+    .catch((error) => {
+      throw new Error("顧客マスタ登録失敗");
+    });
+}
+
+// ===============================================================
+// 申請情報を画面にインプット
+// ===============================================================
+async function getAppInfo(appId) {
+  const appInfo = await db.app.get({ app_id: appId });
+  if (appInfo == null) {
+    throw new Error("該当申請情報なし");
+  }
+  // パラメータ入力
+  setCstParam(appInfo);
+}
+
+// ===============================================================
 // 顧客入力完了
+// ===============================================================
 async function setAppInfo() {
   // 申請テーブルに登録
   const tmpCstInfo = await db.tmp
@@ -254,6 +330,9 @@ async function setAppInfo() {
   delTmpData(FUNC_ID_CSTREGIST_SEARCHRESULT);
 }
 
+// ===============================================================
+// tmpテーブルからcstIdに紐つく顧客データを取得
+// ===============================================================
 async function getTmpCstInfo(cstId) {
   const tmpCstInfo = await db.tmp
     .get({ func_id: FUNC_ID_CSTREGIST_CONFIRM })
@@ -266,7 +345,9 @@ async function getTmpCstInfo(cstId) {
   setCstParam(tmpCstInfo);
 }
 
+// ===============================================================
 // 顧客入力・確認　パラメータ入力
+// ===============================================================
 function setCstParam(cstInfo) {
   $("#cst_id").val(cstInfo.cst_id);
   $("#cst_name_lst").val(cstInfo.cst_name_lst);
@@ -293,18 +374,22 @@ function setCstParam(cstInfo) {
   $("#wkplace_tel").val(cstInfo.wkplace_tel);
 }
 
+
+// ===============================================================
+// tmpテーブルにcstIdに紐つく顧客データを一時保存
 // 顧客入力確認画面表示
-async function setTmpCstInfo(cstId) {
+// ===============================================================
+async function setTmpCstInfo(cstId, funcId) {
   // 検索結果画面に紐付くtmpデータを削除
   await db.tmp
-    .where({ func_id: FUNC_ID_CSTREGIST_CONFIRM })
+    .where({ func_id: funcId })
     .delete()
     .catch((error) => {
       console.error(error);
     });
   await db.tmp
     .put({
-      func_id: FUNC_ID_CSTREGIST_CONFIRM,
+      func_id: funcId,
       cst_id: cstId,
       cst_name_lst: $("#cst_name_lst").val(),
       cst_name_fst: $("#cst_name_fst").val(),
@@ -327,7 +412,56 @@ async function setTmpCstInfo(cstId) {
     });
 }
 
-async function getNewCstId() {
+// ===============================================================
+// tmpテーブルにappIdに紐つく申請データを一時保存
+// 申請情報確認画面表示
+// ===============================================================
+async function setTmpAppInfo(appId, funcId) {
+  // 検索結果画面に紐付くtmpデータを削除
+  await db.tmp
+    .where({ func_id: funcId })
+    .delete()
+    .catch((error) => {
+      console.error(error);
+    });
+
+  // 申込情報を取得
+  const appInfo = await db.app.get({ app_id: appId })
+
+  await db.tmp
+    .put({
+      func_id: funcId,
+      cst_id: $("#cst_id").val(),
+      cst_name_lst: $("#cst_name_lst").val(),
+      cst_name_fst: $("#cst_name_fst").val(),
+      cst_name_kana_lst: $("#cst_name_kana_lst").val(),
+      cst_name_kana_fst: $("#cst_name_kana_fst").val(),
+      sex: $("input:radio[name='radio_sex']:checked").val(),
+      birthday: $("#birthday").val(),
+      home_tel: $("#home_tel").val(),
+      mbl_tel: $("#mbl_tel").val(),
+      mailaddr: $("#mailaddr").val(),
+      post_cd: $("#post_cd").val(),
+      pref_cd: $("#pref_list>option:selected").val(),
+      addr1: $("#addr1").val(),
+      addr2: $("#addr2").val(),
+      wkplace_name: $("#wkplace_name").val(),
+      wkplace_tel: $("#wkplace_tel").val(),
+      app_id: appInfo.app_id,
+      app_status: appInfo.app_status,
+      app_date: appInfo.app_date,
+      app_user_id: appInfo.app_user_id,
+      aprv_div: appInfo.aprv_div,
+    })
+    .catch((error) => {
+      throw new Error("一時テーブルへの申請データ登録失敗");
+    });
+}
+
+// ===============================================================
+// 登録済の申請データのうち申請IDのMAX値を取得
+// ===============================================================
+async function getNewAppId() {
   return await db.app
     .orderBy("app_id")
     .last()
@@ -336,7 +470,22 @@ async function getNewCstId() {
     });
 }
 
+// ===============================================================
+// 登録済の顧客データのうち顧客IDのMAX値を取得
+// ===============================================================
+async function getNewCstId() {
+  return await db.customer
+    .orderBy("cst_id")
+    .last()
+    .catch((error) => {
+      throw new Error("顧客ID取得エラー");
+    });
+}
+
+// ===============================================================
+// 申請ID、申請日に紐つく申請データを取得し画面に表示
 // 申請情報検索
+// ===============================================================
 async function appSearch(appId, appDateFr, appDateTo) {
   let result = [];
 
@@ -396,12 +545,3 @@ async function appSearch(appId, appDateFr, appDateTo) {
   }
 }
 
-async function getAppInfo(appId) {
-  const appInfo = await db.app.get({ app_id: appId });
-  console.log(appInfo)
-  if (appInfo == null) {
-    throw new Error("該当申請情報なし");
-  }
-  // パラメータ入力
-  setCstParam(appInfo);
-}
