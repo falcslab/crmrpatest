@@ -16,12 +16,9 @@ $(document).ready(function () {
     )
       .then(() => {
         $("#btnappsearch").prop("disabled", false);
-        // 申請一覧を表示する
-
       })
       .catch((error) => {
         $("#btnappsearch").prop("disabled", false);
-        console.log("検索エラー");
       });
   });
   $("#backtomain").on("click", function () {

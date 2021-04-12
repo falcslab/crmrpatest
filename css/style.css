@@ -82,12 +82,12 @@ a.systemtitle:hover {
   padding: .5rem 1rem;
 }
 
-.cstlabel {
-  float: left;
-}
-
-.cstinput {
-  float: left;
+.label {
+  color: #0c63e4;
+  background-color: #e7f1ff;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  padding: 0 1.5rem
 }
 
 .registresult {

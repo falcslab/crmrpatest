@@ -222,7 +222,7 @@ async function setAppInfo() {
   // 申請テーブル登録
   await db.app
     .put({
-      app_id: Number(maxAppId) + 1,
+      app_id: String(Number(maxAppId) + 1),
       cst_id: tmpCstInfo.cst_id,
       cst_name_lst: $("#cst_name_lst").val(),
       cst_name_fst: $("#cst_name_fst").val(),
@@ -394,4 +394,14 @@ async function appSearch(appId, appDateFr, appDateTo) {
     $("tbody").append(tmpTag);
     i++;
   }
+}
+
+async function getAppInfo(appId) {
+  const appInfo = await db.app.get({ app_id: appId });
+  console.log(appInfo)
+  if (appInfo == null) {
+    throw new Error("該当申請情報なし");
+  }
+  // パラメータ入力
+  setCstParam(appInfo);
 }

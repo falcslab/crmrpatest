@@ -20,97 +20,98 @@
   <div class="wrapper">
     <div id="header"></div>
     <div class="inputview">
-      <div class="display-5 subtitle">顧客情報入力 確認</div>
+      <div class="display-6 subtitle">顧客情報入力 確認</div>
       <div id="errorinfo"></div>
 
       <div class="mb-3">
-        <label for="cst_name_lst" class="form-label">顧客ID</label>
+        <label for="cst_name_lst" class="label form-label">顧客ID</label>
         <input type="text" class="form-control-plaintext" id="cst_id" readonly />
-        <div class="mb-3">
-          <label for="cst_name_lst" class="form-label">氏名（姓）</label>
-          <input type="text" class="form-control-plaintext" id="cst_name_lst" placeholder="(例) 山田" required="required"
-            value="テスト" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="cst_name_fst" class="form-label">氏名（名）</label>
-          <input type="text" class="form-control-plaintext" id="cst_name_fst" placeholder="(例) 太郎" required="required"
-            value="太郎" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="cst_name_kana_lst" class="form-label">氏名カナ（姓）</label>
-          <input type="text" class="form-control-plaintext" id="cst_name_kana_lst" placeholder="(例) ヤマダ"
-            required="required" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="cst_name_kana_fst" class="form-label">氏名カナ（名）</label>
-          <input type="text" class="form-control-plaintext" id="cst_name_kana_fst" placeholder="(例) タロウ"
-            required="required" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="sex" class="form-label">性別</label>
-          <div class="mb-3 form-check">
-            <input class="form-check-input" type="radio" name="radio_sex" id="sex_man" value="1" disabled />
-            <label class="form-check-label" for="sex_man">男</label>
-          </div>
-          <div class="mb-3 form-check">
-            <input class="form-check-input" type="radio" name="radio_sex" id="sex_woman" value="2" disabled />
-            <label class="form-check-label" for="sex_woman">女</label>
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="birthday" class="form-label">生年月日</label>
-          <input type="text" class="form-control-plaintext" id="birthday" placeholder="(例) 1999/01/01" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="home_tel" class="form-label">自宅電話番号</label>
-          <input type="text" class="form-control-plaintext" id="home_tel" placeholder="(例) 03-1111-2222" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="mbl_tel" class="form-label">携帯電話番号</label>
-          <input type="text" class="form-control-plaintext" id="mbl_tel" placeholder="(例) 080-1111-2222" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="mailaddr" class="form-label">メールアドレス</label>
-          <input type="text" class="form-control-plaintext" id="mailaddr" placeholder="(例) test@test.jp" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="post_cd" class="form-label">郵便番号</label>
-          <input type="text" class="form-control-plaintext" id="post_cd" placeholder="(例) 123-4567" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="pref_cd" class="form-label">都道府県</label>
-          <select class="form-select" id="pref_list" name="pref_list" disabled></select>
-        </div>
-        <div class="mb-3">
-          <label for="addr1" class="form-label">市区町村番地</label>
-          <input type="text" class="form-control-plaintext" id="addr1" placeholder="(例) 渋谷区渋谷1-1-1" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="addr2" class="form-label">建物名・号室</label>
-          <input type="text" class="form-control-plaintext" id="addr2" placeholder="(例) 渋谷マンション101号" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="wkplace_name" class="form-label">勤務先名</label>
-          <input type="text" class="form-control-plaintext" id="wkplace_name" placeholder="(例) テスト会社" readonly />
-        </div>
-        <div class="mb-3">
-          <label for="wkplace_tel" class="form-label">勤務先電話番号</label>
-          <input type="text" class="form-control-plaintext" id="wkplace_tel" placeholder="(例) 03-1111-2222" readonly />
-        </div>
-        <dl class="btn">
-          <dd class="btn">
-            <button type="button" class="btn btn-primary btn-block" id="backtocstinput">
-              顧客情報入力画面に戻る
-            </button>
-          </dd>
-          <dd class="btn">
-            <button type="button" class="btn btn-primary btn-block" id="cstregist_complete">
-              登録
-            </button>
-          </dd>
-        </dl>
       </div>
+      <div class="mb-3">
+        <label for="cst_name_lst" class="label form-label">氏名（姓）</label>
+        <input type="text" class="form-control-plaintext" id="cst_name_lst" placeholder="(例) 山田" required="required"
+          value="テスト" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="cst_name_fst" class="label form-label">氏名（名）</label>
+        <input type="text" class="form-control-plaintext" id="cst_name_fst" placeholder="(例) 太郎" required="required"
+          value="太郎" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="cst_name_kana_lst" class="label form-label">氏名カナ（姓）</label>
+        <input type="text" class="form-control-plaintext" id="cst_name_kana_lst" placeholder="(例) ヤマダ"
+          required="required" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="cst_name_kana_fst" class="label form-label">氏名カナ（名）</label>
+        <input type="text" class="form-control-plaintext" id="cst_name_kana_fst" placeholder="(例) タロウ"
+          required="required" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="sex" class="label form-label">性別</label>
+        <div class="mb-3 form-check">
+          <input class="form-check-input" type="radio" name="radio_sex" id="sex_man" value="1" disabled />
+          <label class="form-check-label" for="sex_man">男</label>
+        </div>
+        <div class="mb-3 form-check">
+          <input class="form-check-input" type="radio" name="radio_sex" id="sex_woman" value="2" disabled />
+          <label class="form-check-label" for="sex_woman">女</label>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="birthday" class="label form-label">生年月日</label>
+        <input type="text" class="form-control-plaintext" id="birthday" placeholder="(例) 1999/01/01" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="home_tel" class="label form-label">自宅電話番号</label>
+        <input type="text" class="form-control-plaintext" id="home_tel" placeholder="(例) 03-1111-2222" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="mbl_tel" class="label form-label">携帯電話番号</label>
+        <input type="text" class="form-control-plaintext" id="mbl_tel" placeholder="(例) 080-1111-2222" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="mailaddr" class="label form-label">メールアドレス</label>
+        <input type="text" class="form-control-plaintext" id="mailaddr" placeholder="(例) test@test.jp" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="post_cd" class="label form-label">郵便番号</label>
+        <input type="text" class="form-control-plaintext" id="post_cd" placeholder="(例) 123-4567" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="pref_cd" class="label form-label">都道府県</label>
+        <select class="form-select" id="pref_list" name="pref_list" disabled></select>
+      </div>
+      <div class="mb-3">
+        <label for="addr1" class="label form-label">市区町村番地</label>
+        <input type="text" class="form-control-plaintext" id="addr1" placeholder="(例) 渋谷区渋谷1-1-1" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="addr2" class="label form-label">建物名・号室</label>
+        <input type="text" class="form-control-plaintext" id="addr2" placeholder="(例) 渋谷マンション101号" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="wkplace_name" class="label form-label">勤務先名</label>
+        <input type="text" class="form-control-plaintext" id="wkplace_name" placeholder="(例) テスト会社" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="wkplace_tel" class="label form-label">勤務先電話番号</label>
+        <input type="text" class="form-control-plaintext" id="wkplace_tel" placeholder="(例) 03-1111-2222" readonly />
+      </div>
+      <dl class="btn">
+        <dd class="btn">
+          <button type="button" class="btn btn-primary btn-block" id="backtocstinput">
+            顧客情報入力画面に戻る
+          </button>
+        </dd>
+        <dd class="btn">
+          <button type="button" class="btn btn-primary btn-block" id="cstregist_complete">
+            登録
+          </button>
+        </dd>
+      </dl>
     </div>
+  </div>
   </div>
   <div id="footer"></div>
 </body>
