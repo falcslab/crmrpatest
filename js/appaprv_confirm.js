@@ -27,10 +27,17 @@ $(document).ready(function () {
   $("#appaprv_complete").on("click", function () {
     // ボタン連打対策
     $("#appaprv_complete").prop("disabled", true);
-
-    // 承認ステータス更新
-
     // 顧客マスタ登録 or 更新
+    setCstInfo()
+      .then(() => {
+        // 承認ステータス更新
+
+      })
+      .catch(() => {
+
+      })
+
+
   });
   $("#backtoappsearch").on("click", function () {
     // 申請情報検索画面へ戻る
