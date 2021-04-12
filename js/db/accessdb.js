@@ -231,7 +231,12 @@ async function setCstInfo(cstId) {
 
   // 顧客マスタに更新 or 登録
   if (tmpAppInfo.cst_id == "") {
-    cstId = await getNewCstId()
+    await getNewCstId()
+      .then((cst) => {
+        cstId = String(Number(cst.cst_id) + 1)
+      }).catch((error) => {
+        throw new Error("顧客ID取得エラー");
+      })
   } else {
     cstId = tmpAppInfo.cst_id
   }

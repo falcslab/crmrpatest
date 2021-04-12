@@ -9,7 +9,7 @@ $(document).ready(function () {
   $("#btncstsearch").on("click", function () {
     // ボタン連打対策
     $("#btncstsearch").prop("disabled", true);
-    cstsearch(
+    cstSearch(
       $("#cst_name_fst").val(),
       $("#cst_name_lst").val(),
       $("#cst_name_kana_fst").val(),
