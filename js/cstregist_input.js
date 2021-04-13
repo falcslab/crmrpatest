@@ -20,7 +20,7 @@ $(document).ready(function () {
       getCstInfo(cstId)
         .then((cstInfo) => {
           // パラメータ入力
-          setCstParam(cstInfo);
+          setCstParam(FUNC_ID_CSTREGIST_INPUT, cstInfo);
           $("#backtosearch").remove();
         })
         .catch(() => {

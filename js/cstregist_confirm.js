@@ -6,29 +6,15 @@ $(document).ready(function () {
   const prms = url.searchParams;
   let cstId = prms.get("cstId");
 
-  getPrefList().then(() => {
-    getTmpCstInfo(FUNC_ID_CSTREGIST_CONFIRM)
-      .then((tmpCstInfo) => {
-        // パラメータ入力
-        setCstParam(tmpCstInfo);
-      })
-      .catch((error) => {
-        // エラーメッセージ表示させる？
-        window.location.href = "./index.html";
-      });
-  });
+  getTmpData(FUNC_ID_CSTREGIST_CONFIRM)
+    .then((tmp) => {
+      // パラメータ入力
+      setCstParam(FUNC_ID_CSTREGIST_CONFIRM, tmp);
+    })
   if (cstId == null) {
     // 新規登録の場合
-    getPrefList()
-      .then((prefListTag) => {
-        // 都道府県リストをセット
-        $("#pref_list").append(prefListTag);
-        $("label[for='cst_id']").remove();
-        $("#cst_id").remove();
-      })
-      .catch(() => {
-        window.location.href = "./index.html";
-      });
+    $("label[for='cst_id']").remove();
+    $("#cst_id").remove();
   }
 
   $("#cstregist_complete").on("click", function () {

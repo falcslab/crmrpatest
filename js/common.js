@@ -5,11 +5,11 @@ const FUNC_ID_CSTREGIST_SEARCHRESULT = "4";
 const FUNC_ID_CSTREGIST_INPUT = "5";
 const FUNC_ID_CSTREGIST_CONFIRM = "6";
 const FUNC_ID_CSTREGIST_COMPLETE = "7";
-const FUNC_ID_APP_LIST = "8";
+const FUNC_ID_APP_SEARCH = "8";
 const FUNC_ID_APP_CONFIRM = "9";
 const FUNC_ID_APP_COMPLETE = "10";
 
-// 承認ステータス　1:承認待ち　2:差戻 3:承認完了
+// 申請ステータス　1:承認待ち　2:差戻 3:承認完了
 const APP_BEFAPPR = "1";
 const APP_REMAND = "2";
 const APP_APPROVED = "3";
@@ -24,6 +24,7 @@ let headerTag =
 let c_appId = "200000";
 let c_cstId = "100000";
 let c_loginId = "";
+let c_loginNm = "";
 
 $(function () {
   $("#header").append(headerTag);
@@ -37,12 +38,13 @@ $(function () {
     logincheck()
       .then((login) => {
         c_loginId = login.login_id;
+        c_loginNm = login.login_name
       })
       .catch((error) => {
         // tmpにログイン情報がない場合、または複数件ある場合
         // エラーメッセージ表示させる？
         delTmpData(FUNC_ID_LOGIN);
-        window.location.href = "./index.html";
+        // window.location.href = "./index.html";
       });
   }
 });
@@ -58,7 +60,7 @@ function formatDate() {
 }
 
 function getAppStatusName(appStatusCd) {
-  // 承認ステータス　1:承認待ち　2:差戻 3:承認完了
+  // 申請ステータス　1:承認待ち　2:差戻 3:承認完了
   let appStatusName = "";
   switch (appStatusCd) {
     case APP_BEFAPPR:
@@ -88,26 +90,40 @@ function getAppDivName(appDivCd) {
 // ===============================================================
 // 顧客入力 パラメータ入力
 // ===============================================================
-function setCstParam(cstInfo) {
+function setCstParam(funcId, cstInfo) {
   $("#cst_id").val(cstInfo.cst_id);
   $("#cst_name_lst").val(cstInfo.cst_name_lst);
   $("#cst_name_fst").val(cstInfo.cst_name_fst);
   $("#cst_name_kana_lst").val(cstInfo.cst_name_kana_lst);
   $("#cst_name_kana_fst").val(cstInfo.cst_name_kana_fst);
-  if (cstInfo.sex == "1") {
-    $("input:radio[name='radio_sex']").val(["1"]);
+  if (funcId == FUNC_ID_CSTREGIST_CONFIRM || funcId == FUNC_ID_APP_CONFIRM) {
+    if (cstInfo.sex == "1") {
+      $("#sex").val("男");
+    } else {
+      $("#sex").val("女");
+    }
   } else {
-    $("input:radio[name='radio_sex']").val(["2"]);
+    if (cstInfo.sex == "1") {
+      $("input:radio[name='radio_sex']").val(["1"]);
+    } else {
+      $("input:radio[name='radio_sex']").val(["2"]);
+    }
   }
   $("#birthday").val(cstInfo.birthday);
   $("#home_tel").val(cstInfo.home_tel);
   $("#mbl_tel").val(cstInfo.mbl_tel);
   $("#mailaddr").val(cstInfo.mailaddr);
   $("#post_cd").val(cstInfo.post_cd);
-  $("#pref_list>option[value='" + cstInfo.pref_cd + "']").prop(
-    "selected",
-    true
-  );
+  if (funcId == FUNC_ID_CSTREGIST_CONFIRM || funcId == FUNC_ID_APP_CONFIRM) {
+    getPrefName(cstInfo.pref_cd).then((pref) => {
+      $("#pref_cd").val(pref.pref_name);
+    })
+  } else {
+    $("#pref_list>option[value='" + cstInfo.pref_cd + "']").prop(
+      "selected",
+      true
+    );
+  }
   $("#addr1").val(cstInfo.addr1);
   $("#addr2").val(cstInfo.addr2);
   $("#wkplace_name").val(cstInfo.wkplace_name);

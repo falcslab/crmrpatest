@@ -7,36 +7,34 @@ $(document).ready(function () {
   const appId = prms.get("appId");
   let cstId = "";
 
-  getPrefList()
-    .then((prefListTag) => {
-      // 都道府県リストをセット
-      $("#pref_list").append(prefListTag);
+  getAppInfo(appId)
+    .then((appInfo) => {
+      cstId = appInfo.cst_id;
 
-      getAppInfo(appId)
-        .then((appInfo) => {
-          cstId = appInfo.cst_id;
-          getCstInfo(cstId).then((cstInfo) => {
-            // パラメータ入力
-            setCstParam(cstInfo);
-            // tmpに申請データを一時保存
-            setTmpAppInfo(appId, FUNC_ID_APP_CONFIRM).catch((error) => {
-              // エラーメッセージ表示させる？
-            });
-          });
-        })
-        .catch((error) => {
+      // 申請ステータスが承認待ちでない場合はボタン制御
+      if (appInfo.app_status != APP_BEFAPPR) {
+        // 差戻の場合
+        $("#appaprv_remand").remove();
+        $("#appaprv_complete").remove();
+      }
+
+      getCstInfo(cstId).then((cstInfo) => {
+        // パラメータ入力
+        setCstParam(FUNC_ID_APP_CONFIRM, cstInfo);
+        // tmpに申請データを一時保存
+        setTmpAppInfo(appId, FUNC_ID_APP_CONFIRM).catch((error) => {
           // エラーメッセージ表示させる？
-          // window.location.href = "./index.html";
         });
+      });
     })
     .catch((error) => {
-      // window.location.href = "./index.html";
+      window.location.href = "./index.html";
     });
 
   $("#appaprv_complete").on("click", function () {
     // ボタン連打対策
     $("#appaprv_complete").prop("disabled", true);
-    // 顧客マスタの承認ステータス、承認者、承認日を更新
+    // 顧客マスタの申請ステータス、承認者、承認日を更新
     updAprvAppInfo(appId)
       .then(() => {
         updAprvCstInfo(cstId)
@@ -52,7 +50,7 @@ $(document).ready(function () {
           });
       })
       .catch((error) => {
-        // window.location.href = "./index.html";
+        window.location.href = "./index.html";
       });
   });
   $("#backtoappsearch").on("click", function () {
