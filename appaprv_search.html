@@ -1,68 +1,107 @@
 <html lang="ja">
-<link rel="stylesheet" href="./css/style.css" />
-<link rel="stylesheet" href="./css/bootstrap-5.0.0/bootstrap.min.css" />
-<link rel="stylesheet" type="text/css" href="./css/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.min.css">
-<script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
-<script type="text/javascript" src="./js/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="./js/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.ja.min.js"></script>
-<script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
-<script type="text/javascript" src="./js/appaprv_search.js"></script>
-<script type="text/javascript" src="./js/db/db_m_user.js"></script>
-<script type="text/javascript" src="./js/db/db_m_pref.js"></script>
-<script type="text/javascript" src="./js/db/db_m_customer.js"></script>
-<script type="text/javascript" src="./js/db/accessdb.js"></script>
-<script type="text/javascript" src="./js/common.js"></script>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/bootstrap-5.0.0/bootstrap.min.css" />
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="./css/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.min.css"
+  />
+  <script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
+  <script
+    type="text/javascript"
+    src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"
+  ></script>
+  <script
+    type="text/javascript"
+    src="./js/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.min.js"
+  ></script>
+  <script
+    type="text/javascript"
+    src="./js/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.ja.min.js"
+  ></script>
+  <script
+    type="text/javascript"
+    src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"
+  ></script>
+  <script type="text/javascript" src="./js/appaprv_search.js"></script>
+  <script type="text/javascript" src="./js/db/db_m_user.js"></script>
+  <script type="text/javascript" src="./js/db/db_m_pref.js"></script>
+  <script type="text/javascript" src="./js/db/db_m_customer.js"></script>
+  <script type="text/javascript" src="./js/common.js"></script>
+  <script type="text/javascript" src="./js/db/accessdb.js"></script>
 
-<head>
-  <meta charset="utf-8" />
-  <title>顧客管理テスト</title>
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <title>顧客管理テスト</title>
+  </head>
 
-<body>
-  <div class="wrapper">
-    <div id="header"></div>
-    <div class="inputview">
-      <div class="display-6 subtitle">申請承認</div>
-      <div id="errorinfo"></div>
-      <div class="card search-cardbody">
-        <h5 class="card-title">申請情報検索</h5>
-        <p class="card-text">申請情報の検索を行います</p>
-        <ul class="list-search list-group list-group-flush">
-          <li class="list-group-item">
-            <div class="mb-3">
-              <label for="app_id" class="label form-label">申請ID</label>
-              <input type="text" class="form-control" id="app_id" placeholder="(例) 200000" required="required" />
-            </div>
-            <label for="app_date_fr" class="label form-label">申請日</label>
-            <div class="mb-3 row">
-              <div class="col-md-4">
-                <input type="text" class="form-control" id="app_date_fr" placeholder="(例) 1999/01/01" />
+  <body>
+    <div class="wrapper">
+      <div id="header"></div>
+      <div class="inputview">
+        <div class="display-6 subtitle">申請承認</div>
+        <div id="errorinfo"></div>
+        <div class="card search-cardbody">
+          <h5 class="card-title">申請情報検索</h5>
+          <p class="card-text">申請情報の検索を行います</p>
+          <ul class="list-search list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="mb-3">
+                <label for="app_id" class="label form-label">申請ID</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="app_id"
+                  placeholder="(例) 200000"
+                  required="required"
+                />
               </div>
-              <div class="col-md-1 fromto">～</div>
-              <div class="col-md-4"><input type="text" class="form-control" id="app_date_to"
-                  placeholder="(例) 1999/01/01" />
+              <label for="app_date_fr" class="label form-label">申請日</label>
+              <div class="mb-3 row">
+                <div class="col-md-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="app_date_fr"
+                    placeholder="(例) 1999/01/01"
+                  />
+                </div>
+                <div class="col-md-1 fromto">～</div>
+                <div class="col-md-4">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="app_date_to"
+                    placeholder="(例) 1999/01/01"
+                  />
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
       </div>
+      <div class="tableview" id="appList"></div>
+      <dl class="btn">
+        <dd class="btn">
+          <button
+            type="button"
+            class="btn btn-primary btn-block"
+            id="backtomain"
+          >
+            メインメニューに戻る
+          </button>
+        </dd>
+        <dd class="btn">
+          <button
+            type="button"
+            class="btn btn-primary btn-block"
+            id="btnappsearch"
+          >
+            検索
+          </button>
+        </dd>
+      </dl>
     </div>
-    <div class="tableview" id="appList"></div>
-    <dl class="btn">
-      <dd class="btn">
-        <button type="button" class="btn btn-primary btn-block" id="backtomain">
-          メインメニューに戻る
-        </button>
-      </dd>
-      <dd class="btn">
-        <button type="button" class="btn btn-primary btn-block" id="btnappsearch">
-          検索
-        </button>
-      </dd>
-    </dl>
-  </div>
-  <div id="footer"></div>
-</body>
-
+    <div id="footer"></div>
+  </body>
 </html>

@@ -11,7 +11,7 @@ $(document).ready(function () {
   }
 
   // 発行された申請ID、顧客IDを画面表示
-  $("#newappid").html("<b>" + appId + "</b>");
+  $("#appid").html("<b>" + appId + "</b>");
   // 発行された申請IDを画面表示
   $("#cstid").html("<b>" + cstId + "</b>");
 

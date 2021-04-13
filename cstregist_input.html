@@ -11,8 +11,8 @@
 <script type="text/javascript" src="./js/db/db_m_user.js"></script>
 <script type="text/javascript" src="./js/db/db_m_pref.js"></script>
 <script type="text/javascript" src="./js/db/db_m_customer.js"></script>
-<script type="text/javascript" src="./js/db/accessdb.js"></script>
 <script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/db/accessdb.js"></script>
 
 <head>
   <meta charset="utf-8" />
@@ -25,26 +25,32 @@
     <div class="inputview">
       <div class="display-6 subtitle">顧客情報入力</div>
       <div id="errorinfo"></div>
+      <dl class="btn-center">
+        <dd class="btn">
+          <button type="button" class="btn btn-outline-primary" id="setCstTestData">
+            テストデータをセット
+          </button>
+        </dd>
+      </dl>
       <div class="mb-3">
-        <label for="cst_name_lst" class="label form-label">顧客ID</label>
+        <label for="cst_id" class="label form-label">顧客ID</label>
         <input type="text" class="form-control-plaintext" class="form-control" id="cst_id" readonly />
       </div>
       <div class="mb-3">
         <label for="cst_name_lst" class="label form-label">氏名（姓）</label>
-        <input type="text" class="form-control" id="cst_name_lst" placeholder="(例) 山田" required="required"
-          value="テスト" />
+        <input type="text" class="form-control" id="cst_name_lst" placeholder="(例) 山田" />
       </div>
       <div class="mb-3">
         <label for="cst_name_fst" class="label form-label">氏名（名）</label>
-        <input type="text" class="form-control" id="cst_name_fst" placeholder="(例) 太郎" required="required" value="太郎" />
+        <input type="text" class="form-control" id="cst_name_fst" placeholder="(例) 太郎" />
       </div>
       <div class="mb-3">
         <label for="cst_name_kana_lst" class="label form-label">氏名カナ（姓）</label>
-        <input type="text" class="form-control" id="cst_name_kana_lst" placeholder="(例) ヤマダ" required="required" />
+        <input type="text" class="form-control" id="cst_name_kana_lst" placeholder="(例) ヤマダ" />
       </div>
       <div class="mb-3">
         <label for="cst_name_kana_fst" class="label form-label">氏名カナ（名）</label>
-        <input type="text" class="form-control" id="cst_name_kana_fst" placeholder="(例) タロウ" required="required" />
+        <input type="text" class="form-control" id="cst_name_kana_fst" placeholder="(例) タロウ" />
       </div>
       <div class="mb-3">
         <label for="sex" class="label form-label">性別</label>
@@ -80,7 +86,7 @@
         <input type="text" class="form-control" id="post_cd" placeholder="(例) 123-4567" />
       </div>
       <div class="mb-3">
-        <label for="post_cd" class="label form-label">都道府県</label>
+        <label for="pref_list" class="label form-label">都道府県</label>
         <select class="form-select" id="pref_list" name="pref_list"></select>
       </div>
       <div class="mb-3">
@@ -104,6 +110,9 @@
         <dd class="btn">
           <button type="button" class="btn btn-primary btn-block" id="backtosearchresult">
             名寄せ検索結果画面に戻る
+          </button>
+          <button type="button" class="btn btn-primary btn-block" id="backtosearch">
+            名寄せ検索画面に戻る
           </button>
         </dd>
         <dd class="btn">

@@ -3,9 +3,11 @@ const cstListTag =
   "<tr><th>{$no}</th><td><a href='./cstregist_input.html?cstId={$cstId}' name='cstIdlink'>{$cstId}</button></td><td>{$cstNameLst}</td><td>{$cstNameFst}</td>" +
   "<td>{$cstNameKanaLst}</td><td>{$cstNameKanaFst}</td><td>{$birthDay}</td>" +
   "<td>{$homeTel}</td><td>{$mblTel}</td></tr>";
-const appTableTag = "<table class='table table-striped appList'><thead><tr><th>#</th><th>申請ID</th><th>承認区分</th><th>申請ステータス</th>" +
-  "<th>申請ユーザー</th><th>申請日</th></tr></thead><tbody></tbody></table>"
-const appListTag = "<tr><th>{$no}</th><td><a href='./appaprv_confirm.html?appId={$appId}' name='appIdlink'>{$appId}</button></td><td>{$aprvDivName}</td>" +
+const appTableTag =
+  "<table class='table table-striped appList'><thead><tr><th>#</th><th>申請ID</th><th>承認区分</th><th>申請ステータス</th>" +
+  "<th>申請ユーザー</th><th>申請日</th></tr></thead><tbody></tbody></table>";
+const appListTag =
+  "<tr><th>{$no}</th><td><a href='./appaprv_confirm.html?appId={$appId}' name='appIdlink'>{$appId}</button></td><td>{$aprvDivName}</td>" +
   "<td>{$appStatusName}</td><td>{$appUserName}</td><td>{$appDate}</td>";
 const prefTag =
   "<option id='prefcd_{$prefCd}' value={$prefCd}>{$prefName}</option>";
@@ -16,7 +18,7 @@ function initdb() {
     pref: "&pref_cd",
     customer:
       "&cst_id, cst_name_fst, cst_name_lst, cst_name_kana_fst, cst_name_kana_lst, birthday, home_tel, mbl_tel",
-    app: "&app_id",
+    app: "&app_id, cst_id",
     tmp: "++id, func_id, cst_id, login_id",
   });
 }
@@ -39,10 +41,9 @@ function bulkputdb() {
 // userIdに紐つくユーザー情報を取得
 // ===============================================================
 async function getUserData(userId) {
-  return await db.user.get({ login_id: userId })
-    .catch((error) => {
-      throw new Error("該当ユーザーなし");
-    })
+  return await db.user.get({ login_id: userId }).catch((error) => {
+    throw new Error("該当ユーザーなし");
+  });
 }
 
 // ===============================================================
@@ -74,7 +75,7 @@ async function logincheck() {
     .get({
       func_id: FUNC_ID_LOGIN,
     })
-    .catch(() => {
+    .catch((error) => {
       // tmpにログイン情報がない場合はログインエラー
       throw new Error("ログインエラー");
     });
@@ -206,7 +207,7 @@ async function getPrefList() {
     tmpSelectPrefTag = tmpSelectPrefTag.replace("{$prefName}", pf.pref_name);
     prefListTag = prefListTag + tmpSelectPrefTag;
   }
-  $("#pref_list").append(prefListTag);
+  return prefListTag;
 }
 
 async function getCstInfo(cstId) {
@@ -214,63 +215,99 @@ async function getCstInfo(cstId) {
   if (cstInfo == null) {
     throw new Error("該当顧客情報なし");
   }
-  // パラメータ入力
-  setCstParam(cstInfo);
+  return cstInfo;
 }
 
 // ===============================================================
-// 申請情報（顧客データ）を顧客マスタに登録
-// 申請情報確認画面⇒承認で実施
+// 顧客入力画面のデータをもとに顧客マスタに登録
 // ===============================================================
-async function setCstInfo(cstId) {
-  const tmpAppInfo = await db.tmp
-    .get({ func_id: FUNC_ID_APP_CONFIRM })
-    .catch((error) => {
-      throw new Error("該当申請情報なし");
-    });
+async function setCstInfo(funcId) {
+  const tmpCstInfo = await db.tmp.get({ func_id: funcId }).catch((error) => {
+    throw new Error("該当申請情報なし");
+  });
 
-  // 顧客マスタに更新 or 登録
-  if (tmpAppInfo.cst_id == "") {
-    await getNewCstId()
-      .then((cst) => {
-        cstId = String(Number(cst.cst_id) + 1)
-      }).catch((error) => {
-        throw new Error("顧客ID取得エラー");
-      })
+  let cstId = "";
+  if (tmpCstInfo.cst_id != "") {
+    cstId = tmpCstInfo.cst_id;
   } else {
-    cstId = tmpAppInfo.cst_id
+    // 顧客マスタからcst_idのMax値+1を取得
+    await getNewCstId().then((maxCstId) => {
+      if (maxCstId != "") {
+        cstId = String(Number(maxCstId) + 1);
+      } else {
+        cstId = c_cstId;
+      }
+    });
   }
 
+  // 顧客マスタに更新 or 登録
   await db.customer
     .put({
       cst_id: cstId,
-      cst_name_lst: tmpAppInfo.cst_name_lst,
-      cst_name_fst: tmpAppInfo.cst_name_fst,
-      cst_name_kana_lst: tmpAppInfo.cst_name_kana_lst,
-      cst_name_kana_fst: tmpAppInfo.cst_name_kana_fst,
-      sex: tmpAppInfo.sex,
-      birthday: tmpAppInfo.birthday,
-      home_tel: tmpAppInfo.home_tel,
-      mbl_tel: tmpAppInfo.mbl_tel,
-      mailaddr: tmpAppInfo.mailaddr,
-      post_cd: tmpAppInfo.post_cd,
-      pref_cd: tmpAppInfo.pref_cd,
-      addr1: tmpAppInfo.addr1,
-      addr2: tmpAppInfo.addr2,
-      wkplace_name: tmpAppInfo.wkplace_name,
-      wkplace_tel: tmpAppInfo.wkplace_tel,
+      cst_name_lst: tmpCstInfo.cst_name_lst,
+      cst_name_fst: tmpCstInfo.cst_name_fst,
+      cst_name_kana_lst: tmpCstInfo.cst_name_kana_lst,
+      cst_name_kana_fst: tmpCstInfo.cst_name_kana_fst,
+      sex: tmpCstInfo.sex,
+      birthday: tmpCstInfo.birthday,
+      home_tel: tmpCstInfo.home_tel,
+      mbl_tel: tmpCstInfo.mbl_tel,
+      mailaddr: tmpCstInfo.mailaddr,
+      post_cd: tmpCstInfo.post_cd,
+      pref_cd: tmpCstInfo.pref_cd,
+      addr1: tmpCstInfo.addr1,
+      addr2: tmpCstInfo.addr2,
+      wkplace_name: tmpCstInfo.wkplace_name,
+      wkplace_tel: tmpCstInfo.wkplace_tel,
+      app_status: "",
+      aprv_user_id: "",
+      aprv_date: "",
     })
     .catch((error) => {
       throw new Error("顧客マスタ登録失敗");
     });
+
+  return cstId;
 }
 
 // ===============================================================
-// 申請情報の承認ステータスを更新
-// 承認者、承認日時を追加する
+// 申請承認後、顧客マスタを更新
 // ===============================================================
-async function updateAppStatus(appInfo) {
-  // 
+async function updAprvCstInfo(cstId) {
+  // 顧客マスタを更新
+  await db.customer
+    .put({
+      cst_id: cstId,
+      app_status: APP_APPROVED,
+      aprv_user_id: c_loginId,
+      aprv_date: formatDate(),
+    })
+    .catch((error) => {
+      throw new Error("顧客マスタ更新失敗");
+    });
+}
+
+// ===============================================================
+// 申請承認後、申請データを更新
+// ===============================================================
+async function updAprvAppInfo(appId) {
+  const appInfo = await db.app.get({ app_id: appId })
+  if (appInfo == null) {
+    throw new Error("該当申請情報なし");
+  }
+  // 申請データを更新
+  await db.app
+    .put({
+      app_id: appId,
+      cst_id: appInfo.cst_id,
+      app_status: APP_APPROVED,
+      aprv_user_id: c_loginId,
+      app_date: appInfo.app_date, // 引き継ぐ
+      aprv_date: formatDate(),
+    })
+    .catch((error) => {
+      throw new Error("申請データ更新失敗");
+    });
 }
 
 // ===============================================================
@@ -281,124 +318,68 @@ async function getAppInfo(appId) {
   if (appInfo == null) {
     throw new Error("該当申請情報なし");
   }
-  // パラメータ入力
-  setCstParam(appInfo);
+  return appInfo;
 }
 
 // ===============================================================
 // 顧客入力完了
 // ===============================================================
-async function setAppInfo() {
-  // 申請テーブルに登録
-  const tmpCstInfo = await db.tmp
-    .get({ func_id: FUNC_ID_CSTREGIST_CONFIRM })
-    .catch((error) => {
-      throw new Error("該当顧客入力情報なし");
-    });
+async function setAppInfo(funcId) {
+  // tmpから顧客情報を取得
+  const tmpCstInfo = await db.tmp.get({ func_id: funcId }).catch((error) => {
+    throw new Error("該当顧客入力情報なし");
+  });
 
-  // 申請テーブルからapp_idのMax値を取得
-  let maxAppId = c_appId;
-  await db.app
-    .orderBy("app_id")
-    .last()
-    .then((app) => {
-      maxAppId = app.app_id;
-    })
-    .catch((error) => {
-      // 何もしない
-    });
+  // 申請テーブルからapp_idのMax値+1を取得
+  let appId = "";
+  await getNewAppId().then((maxAppId) => {
+    if (maxAppId != "") {
+      appId = String(Number(maxAppId) + 1);
+    } else {
+      appId = c_appId;
+    }
+  });
 
   // 申請テーブル登録
   await db.app
     .put({
-      app_id: String(Number(maxAppId) + 1),
+      app_id: appId,
       cst_id: tmpCstInfo.cst_id,
-      cst_name_lst: $("#cst_name_lst").val(),
-      cst_name_fst: $("#cst_name_fst").val(),
-      cst_name_kana_lst: $("#cst_name_kana_lst").val(),
-      cst_name_kana_fst: $("#cst_name_kana_fst").val(),
-      sex: $("input:radio[name='radio_sex']:checked").val(),
-      birthday: $("#birthday").val(),
-      home_tel: $("#home_tel").val(),
-      mbl_tel: $("#mbl_tel").val(),
-      mailaddr: $("#mailaddr").val(),
-      post_cd: $("#post_cd").val(),
-      pref_cd: $("#pref_list>option:selected").val(),
-      addr1: $("#addr1").val(),
-      addr2: $("#addr2").val(),
-      wkplace_name: $("#wkplace_name").val(),
-      wkplace_tel: $("#wkplace_tel").val(),
       app_status: APP_BEFAPPR,
       app_date: formatDate(),
       app_user_id: c_loginId,
       aprv_div: APPDIV_CUSTOMERREGIST,
+      aprv_date: ""
     })
     .catch((error) => {
       throw new Error("顧客情報更新失敗");
     });
 
-  // 顧客入力確認画面用の一時保存データを削除
-  delTmpData(FUNC_ID_CSTREGIST_CONFIRM);
-  // 名寄せ検索結果画面用の一時保存データを削除
-  delTmpData(FUNC_ID_CSTREGIST_SEARCHRESULT);
+  return appId;
 }
 
 // ===============================================================
-// tmpテーブルからcstIdに紐つく顧客データを取得
+// tmpテーブルからfuncIdに紐つく顧客データを取得
 // ===============================================================
-async function getTmpCstInfo(cstId) {
-  const tmpCstInfo = await db.tmp
-    .get({ func_id: FUNC_ID_CSTREGIST_CONFIRM })
-    .catch((error) => {
-      if (tmpCstInfo == null) {
-        throw new Error("該当顧客入力情報なし");
-      }
-    });
-  // パラメータ入力
-  setCstParam(tmpCstInfo);
+async function getTmpCstInfo(funcId) {
+  const tmpCstInfo = await db.tmp.get({ func_id: funcId }).catch((error) => {
+    if (tmpCstInfo == null) {
+      throw new Error("該当顧客入力情報なし");
+    }
+  });
+  return tmpCstInfo;
 }
-
-// ===============================================================
-// 顧客入力・確認　パラメータ入力
-// ===============================================================
-function setCstParam(cstInfo) {
-  $("#cst_id").val(cstInfo.cst_id);
-  $("#cst_name_lst").val(cstInfo.cst_name_lst);
-  $("#cst_name_fst").val(cstInfo.cst_name_fst);
-  $("#cst_name_kana_lst").val(cstInfo.cst_name_kana_lst);
-  $("#cst_name_kana_fst").val(cstInfo.cst_name_kana_fst);
-  if (cstInfo.sex == "1") {
-    $("input:radio[name='radio_sex']").val(["1"]);
-  } else {
-    $("input:radio[name='radio_sex']").val(["2"]);
-  }
-  $("#birthday").val(cstInfo.birthday);
-  $("#home_tel").val(cstInfo.home_tel);
-  $("#mbl_tel").val(cstInfo.mbl_tel);
-  $("#mailaddr").val(cstInfo.mailaddr);
-  $("#post_cd").val(cstInfo.post_cd);
-  $("#pref_list>option[value='" + cstInfo.pref_cd + "']").prop(
-    "selected",
-    true
-  );
-  $("#addr1").val(cstInfo.addr1);
-  $("#addr2").val(cstInfo.addr2);
-  $("#wkplace_name").val(cstInfo.wkplace_name);
-  $("#wkplace_tel").val(cstInfo.wkplace_tel);
-}
-
 
 // ===============================================================
 // tmpテーブルにcstIdに紐つく顧客データを一時保存
 // 顧客入力確認画面表示
 // ===============================================================
 async function setTmpCstInfo(cstId, funcId) {
-  // 検索結果画面に紐付くtmpデータを削除
   await db.tmp
     .where({ func_id: funcId })
     .delete()
     .catch((error) => {
-      console.error(error);
+      throw new Error("一時テーブルの顧客データ削除失敗");
     });
   await db.tmp
     .put({
@@ -439,32 +420,36 @@ async function setTmpAppInfo(appId, funcId) {
     });
 
   // 申込情報を取得
-  const appInfo = await db.app.get({ app_id: appId })
+  const appInfo = await db.app.get({ app_id: appId });
+  if (appInfo == null) {
+    throw new Error("該当申請情報なし");
+  }
 
   await db.tmp
     .put({
       func_id: funcId,
-      cst_id: $("#cst_id").val(),
-      cst_name_lst: $("#cst_name_lst").val(),
-      cst_name_fst: $("#cst_name_fst").val(),
-      cst_name_kana_lst: $("#cst_name_kana_lst").val(),
-      cst_name_kana_fst: $("#cst_name_kana_fst").val(),
-      sex: $("input:radio[name='radio_sex']:checked").val(),
-      birthday: $("#birthday").val(),
-      home_tel: $("#home_tel").val(),
-      mbl_tel: $("#mbl_tel").val(),
-      mailaddr: $("#mailaddr").val(),
-      post_cd: $("#post_cd").val(),
-      pref_cd: $("#pref_list>option:selected").val(),
-      addr1: $("#addr1").val(),
-      addr2: $("#addr2").val(),
-      wkplace_name: $("#wkplace_name").val(),
-      wkplace_tel: $("#wkplace_tel").val(),
+      // cst_id: $("#cst_id").val(),
+      // cst_name_lst: $("#cst_name_lst").val(),
+      // cst_name_fst: $("#cst_name_fst").val(),
+      // cst_name_kana_lst: $("#cst_name_kana_lst").val(),
+      // cst_name_kana_fst: $("#cst_name_kana_fst").val(),
+      // sex: $("input:radio[name='radio_sex']:checked").val(),
+      // birthday: $("#birthday").val(),
+      // home_tel: $("#home_tel").val(),
+      // mbl_tel: $("#mbl_tel").val(),
+      // mailaddr: $("#mailaddr").val(),
+      // post_cd: $("#post_cd").val(),
+      // pref_cd: $("#pref_list>option:selected").val(),
+      // addr1: $("#addr1").val(),
+      // addr2: $("#addr2").val(),
+      // wkplace_name: $("#wkplace_name").val(),
+      // wkplace_tel: $("#wkplace_tel").val(),
       app_id: appInfo.app_id,
       app_status: appInfo.app_status,
       app_date: appInfo.app_date,
       app_user_id: appInfo.app_user_id,
       aprv_div: appInfo.aprv_div,
+      aprv_date: ""
     })
     .catch((error) => {
       throw new Error("一時テーブルへの申請データ登録失敗");
@@ -475,24 +460,34 @@ async function setTmpAppInfo(appId, funcId) {
 // 登録済の申請データのうち申請IDのMAX値を取得
 // ===============================================================
 async function getNewAppId() {
-  return await db.app
+  let appId = "";
+  const app = await db.app
     .orderBy("app_id")
     .last()
     .catch((error) => {
       throw new Error("申請ID取得エラー");
     });
+  if (app != null) {
+    appId = app.app_id;
+  }
+  return appId;
 }
 
 // ===============================================================
 // 登録済の顧客データのうち顧客IDのMAX値を取得
 // ===============================================================
 async function getNewCstId() {
-  return await db.customer
+  let cstId = "";
+  const cst = await db.customer
     .orderBy("cst_id")
     .last()
     .catch((error) => {
       throw new Error("顧客ID取得エラー");
     });
+  if (cst != null) {
+    cstId = cst.cst_id;
+  }
+  return cstId;
 }
 
 // ===============================================================
@@ -508,7 +503,7 @@ async function appSearch(appId, appDateFr, appDateTo) {
     throw new Error("日付の大小が不正");
   }
 
-  let appList = await db.app.toArray()
+  let appList = await db.app.toArray();
   if (appList.length == 0) {
     throw new Error("申請データなし");
   }
@@ -536,11 +531,10 @@ async function appSearch(appId, appDateFr, appDateTo) {
   let i = 0;
   for (let res of result) {
     // パラメータ置換
-    let appUserName = ""
-    await getUserData(res.app_user_id)
-      .then((user) => {
-        appUserName = user.login_name
-      })
+    let appUserName = "";
+    await getUserData(res.app_user_id).then((user) => {
+      appUserName = user.login_name;
+    });
     if (appUserName == "") {
       break;
     }
@@ -549,7 +543,10 @@ async function appSearch(appId, appDateFr, appDateTo) {
     tmpTag = tmpTag.replace("{$no}", i + 1);
     tmpTag = tmpTag.replaceAll("{$appId}", res.app_id);
     tmpTag = tmpTag.replace("{$aprvDivName}", getAppDivName(res.aprv_div));
-    tmpTag = tmpTag.replace("{$appStatusName}", getAppStatusName(res.app_status));
+    tmpTag = tmpTag.replace(
+      "{$appStatusName}",
+      getAppStatusName(res.app_status)
+    );
     tmpTag = tmpTag.replace("{$appUserName}", appUserName);
     tmpTag = tmpTag.replace("{$appDate}", res.app_date);
 
@@ -557,4 +554,3 @@ async function appSearch(appId, appDateFr, appDateTo) {
     i++;
   }
 }
-

@@ -79,7 +79,7 @@ a.systemtitle:hover {
 
 .fromto {
   text-align: center;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .label {
@@ -87,7 +87,7 @@ a.systemtitle:hover {
   background-color: #e7f1ff;
   border-radius: 0.25rem;
   font-size: 0.9rem;
-  padding: 0 1.5rem
+  padding: 0 1.5rem;
 }
 
 .registresult {
@@ -95,7 +95,7 @@ a.systemtitle:hover {
   margin: 100px 0 60px 0;
 }
 
-.appiddisp {
+.iddisp {
   font-size: 24px;
   margin-bottom: 20px;
 }
@@ -127,6 +127,10 @@ a.systemtitle:hover {
 dl.btn {
   width: 100%;
   margin-top: 30px;
+}
+
+dl.btn-center {
+  text-align: center;
 }
 
 dd.btn {

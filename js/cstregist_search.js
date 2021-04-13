@@ -1,9 +1,9 @@
 $(document).ready(function () {
   initdb();
 
-  $('#birthday').datepicker({
-    language: 'ja',
-    format: 'yyyy/mm/dd'
+  $("#birthday").datepicker({
+    language: "ja",
+    format: "yyyy/mm/dd",
   });
 
   $("#btncstsearch").on("click", function () {
@@ -26,6 +26,10 @@ $(document).ready(function () {
         $("#btncstsearch").prop("disabled", false);
         console.log("検索エラー");
       });
+  });
+  $("#btncstresist").on("click", function () {
+    // 顧客情報入力画面へ
+    window.location.href = "./cstregist_input.html";
   });
   $("#backtomain").on("click", function () {
     // メインメニューに戻る
