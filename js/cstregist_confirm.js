@@ -7,9 +7,14 @@ $(document).ready(function () {
   let cstId = prms.get("cstId");
 
   getTmpData(FUNC_ID_CSTREGIST_CONFIRM)
-    .then((tmp) => {
-      // パラメータ入力
-      setCstParam(FUNC_ID_CSTREGIST_CONFIRM, tmp);
+    .then((tmpList) => {
+      // パラメータ入力        
+      if (tmpList.length == 1) {
+        setCstParam(FUNC_ID_CSTREGIST_CONFIRM, tmpList[0]);
+      } else {
+        // tmpに顧客入力情報が複数あるためエラー
+        window.location.href = "./index.html";
+      }
     })
   if (cstId == null) {
     // 新規登録の場合

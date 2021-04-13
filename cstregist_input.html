@@ -25,13 +25,13 @@
     <div class="inputview">
       <div class="display-6 subtitle">顧客情報入力</div>
       <div id="errorinfo"></div>
-      <dl class="btn-center">
-        <dd class="btn">
+      <div class="btn-form">
+        <div class="btn">
           <button type="button" class="btn btn-outline-primary" id="setCstTestData">
             テストデータをセット
           </button>
-        </dd>
-      </dl>
+        </div>
+      </div>
       <div class="mb-3">
         <label for="cst_id" class="label form-label">顧客ID</label>
         <input type="text" class="form-control-plaintext" class="form-control" id="cst_id" readonly />
@@ -106,23 +106,25 @@
         <input type="text" class="form-control" id="wkplace_tel" placeholder="(例) 03-1111-2222" />
       </div>
       </dl>
-      <dl class="btn">
-        <dd class="btn">
+      <div class="btn-form">
+        <div class="btn">
           <button type="button" class="btn btn-primary btn-block" id="backtosearchresult">
             名寄せ検索結果画面に戻る
           </button>
+        </div>
+        <div class="btn">
           <button type="button" class="btn btn-primary btn-block" id="backtosearch">
             名寄せ検索画面に戻る
           </button>
-        </dd>
-        <dd class="btn">
+        </div>
+        <div class="btn">
           <button type="button" class="btn btn-primary btn-block" id="cstregistconfirm">
             確認
           </button>
-        </dd>
+        </div>
+      </div>
+      </dl>
     </div>
-    </dl>
-  </div>
   </div>
   <div id="footer"></div>
 </body>

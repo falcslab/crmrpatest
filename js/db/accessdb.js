@@ -143,9 +143,9 @@ async function cstSearch(
     .each((cst) => {
       result.push(cst);
     })
-    .catch((error) => {
-      console.error("検索結果0件");
-    });
+  if (result.length == 0) {
+    console.error("検索結果0件");
+  }
 
   // 検索結果画面に紐付くtmpデータを削除
   await db.tmp
@@ -155,7 +155,7 @@ async function cstSearch(
       console.error(error);
     });
 
-  if (result.length != 0) {
+  if (result.length > 0) {
     for (let res of result) {
       // 検索結果画面のIDをセット
       res.func_id = FUNC_ID_CSTREGIST_SEARCHRESULT;
@@ -180,7 +180,6 @@ async function getCstSearchResult() {
     .each((tmp) => {
       tmpArr.push(tmp);
     });
-
   if (tmpArr.length == 0) {
     throw new Error("検索結果0件");
   }
@@ -390,13 +389,12 @@ async function setAppInfo(funcId) {
 // tmpテーブルからfuncIdに紐つく顧客データを取得
 // ===============================================================
 async function getTmpData(funcId) {
-  // getは1件のみ。。。
-  return await db.tmp.get({ func_id: funcId })
-    .catch((error) => {
-      if (tmpInfo == null) {
-        throw new Error("該当する一時保存データなし");
-      }
-    });
+  let tmpList = [];
+  await db.tmp.where({ func_id: funcId })
+    .each((tmp) => {
+      tmpList.push(tmp);
+    })
+  return tmpList;
 }
 
 // ===============================================================
@@ -441,10 +439,10 @@ async function setTmpCstInfo(cstId, funcId) {
 // ===============================================================
 async function setTmpAppInfo(appId, funcId) {
   // 申込情報を取得
-  const appInfo = await db.app.get({ app_id: appId });
-  if (appInfo == null) {
-    throw new Error("該当申請情報なし");
-  }
+  let appInfo = await db.app
+    .get({ app_id: appId }).catch((error) => {
+      throw new Error("該当申請情報なし");
+    })
 
   await db.tmp
     .put({
@@ -502,31 +500,27 @@ async function getNewCstId() {
 async function appSearch(appId, appDateFr, appDateTo) {
   let result = [];
 
-  // 検索
-  // 検索結果が一時保存されていない場合（初回検索）
-  if (result.length == 0) {
-    await db.app.toArray()
-      .then((appList) => {
-        for (let ap of appList) {
-          if (appId != "") {
-            if (ap.app_id == appId) {
+  await db.app.toArray()
+    .then((appList) => {
+      for (let ap of appList) {
+        if (appId != "") {
+          if (ap.app_id == appId) {
+            result.push(ap);
+          }
+        } else {
+          if (appDateFr != "" && appDateTo != "") {
+            if (ap.app_date >= appDateFr && ap.app_date <= appDateTo) {
               result.push(ap);
             }
           } else {
-            if (appDateFr != "" && appDateTo != "") {
-              if (ap.app_date >= appDateFr && ap.app_date <= appDateTo) {
-                result.push(ap);
-              }
-            } else {
-              // 検索項目すべてブランクの場合、全件表示
-              result.push(ap);
-            }
+            // 検索項目すべてブランクの場合、全件表示
+            result.push(ap);
           }
         }
-      });
-    if (result.length == 0) {
-      throw new Error("検索結果0件");
-    }
+      }
+    });
+  if (result.length == 0) {
+    throw new Error("検索結果0件");
   }
   return result;
 }

@@ -41,6 +41,8 @@ $(document).ready(function () {
           .then(() => {
             // 申請情報確認画面用の一時保存データを削除
             delTmpData(FUNC_ID_APP_CONFIRM);
+            // 申請情報検索画面用の一時保存データを削除
+            delTmpData(FUNC_ID_APP_SEARCH);
             // 申請情報承認完了画面へ
             window.location.href =
               "./appaprv_complete.html?" + "cstId=" + cstId + "&appId=" + appId;
@@ -54,7 +56,10 @@ $(document).ready(function () {
       });
   });
   $("#backtoappsearch").on("click", function () {
-    // 申請情報検索画面へ戻る
-    window.location.href = "./appaprv_search.html";
+    // 申請情報確認画面用の一時保存データを削除
+    delTmpData(FUNC_ID_APP_CONFIRM).then(() => {
+      // 申請情報検索画面へ戻る
+      window.location.href = "./appaprv_search.html";
+    })
   });
 });

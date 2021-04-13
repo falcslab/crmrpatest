@@ -8,12 +8,10 @@ $(document).ready(function () {
 
   $("table").remove();
 
-  let tmpAppList = [];
   getTmpData(FUNC_ID_APP_SEARCH)
-    .then((tmp) => {
-      if (tmp != null) {
-        tmpAppList.push(tmp)
-        dispAppList(tmpAppList)
+    .then((tmpList) => {
+      if (tmpList.length > 0) {
+        dispAppList(tmpList)
       }
     });
 
@@ -33,7 +31,7 @@ $(document).ready(function () {
         dispAppList(appList)
         // tmpテーブルに検索結果を一時保存
         for (let ap of appList) {
-          setTmpAppInfo(ap.app_Id, FUNC_ID_APP_SEARCH)
+          setTmpAppInfo(ap.app_id, FUNC_ID_APP_SEARCH)
         }
       })
     })
@@ -42,8 +40,11 @@ $(document).ready(function () {
   })
 
   $("#backtomain").on("click", function () {
-    // メインメニューに戻る
-    window.location.href = "./main.html";
+    delTmpData(FUNC_ID_APP_SEARCH).then(() => {
+      // メインメニューに戻る
+      window.location.href = "./main.html";
+    })
+
   });
 
 });

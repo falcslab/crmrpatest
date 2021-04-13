@@ -24,7 +24,7 @@ $(document).ready(function () {
       })
       .catch((error) => {
         $("#btncstsearch").prop("disabled", false);
-        console.log("検索エラー");
+        console.error("検索エラー");
       });
   });
   $("#btncstresist").on("click", function () {

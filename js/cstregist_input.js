@@ -21,7 +21,6 @@ $(document).ready(function () {
         .then((cstInfo) => {
           // パラメータ入力
           setCstParam(FUNC_ID_CSTREGIST_INPUT, cstInfo);
-          $("#backtosearch").remove();
         })
         .catch(() => {
           window.location.href = "./index.html";
@@ -64,10 +63,6 @@ $(document).ready(function () {
       .catch((error) => {
         window.location.href = "./index.html";
       });
-    // }
-    // .catch (() => {
-    //    // エラーメッセージ表示
-    // })
   });
 
   // テストデータをセットする
