@@ -28,6 +28,13 @@ $(document).ready(function () {
     });
   } else {
     // 新規登録の場合
+    getTmpData(FUNC_ID_CSTREGIST_CONFIRM)
+      .then((tmpList) => {
+        if (tmpList.length == 1) {
+          setCstParam(FUNC_ID_CSTREGIST_INPUT, tmpList[0])
+        }
+      });
+
     getPrefList()
       .then((prefListTag) => {
         // 都道府県リストをセット
@@ -44,9 +51,13 @@ $(document).ready(function () {
   $("#cstregistconfirm").on("click", function () {
     // ボタン連打対策
     $("#cstregistconfirm").prop("disabled", true);
+
+
     // パラメータチェック
     // checkCstParam()
     // .then (() =>{
+
+
     let urlPrm = "";
     if (cstId != null) {
       // 既存顧客の場合はURLパラメータにcstIdを付ける
@@ -70,11 +81,17 @@ $(document).ready(function () {
     setCstTestData();
   });
   $("#backtosearch").on("click", function () {
-    // 名寄せ検索画面に戻る
-    window.location.href = "./cstregist_search.html";
+    // 顧客入力確認画面用の一時保存データを削除
+    delTmpData(FUNC_ID_CSTREGIST_CONFIRM).then(() => {
+      // 名寄せ検索画面に戻る
+      window.location.href = "./cstregist_search.html";
+    });
   });
   $("#backtosearchresult").on("click", function () {
-    // 名寄せ検索結果画面に戻る
-    window.location.href = "./cstregist_searchresult.html";
+    // 顧客入力確認画面用の一時保存データを削除
+    delTmpData(FUNC_ID_CSTREGIST_CONFIRM).then(() => {
+      // 名寄せ検索結果画面に戻る
+      window.location.href = "./cstregist_searchresult.html";
+    });
   });
 });

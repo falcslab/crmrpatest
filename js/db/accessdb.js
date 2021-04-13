@@ -87,7 +87,7 @@ async function logincheck() {
 // prefCdに紐つく都道府県名を取得
 // ===============================================================
 async function getPrefName(prefCd) {
-  return db.pref.get({ pref_cd: prefCd })
+  return db.pref.get({ pref_cd: Number(prefCd) })
     .catch((error) => {
       throw new Error("該当する都道府県なし");
     });
@@ -209,7 +209,7 @@ async function getCstSearchResult() {
 // ===============================================================
 async function getPrefList() {
   let prefListTag = "";
-  const pref = await db.pref.toArray();
+  const pref = await db.pref.orderBy("pref_cd").toArray();
   for (let pf of pref) {
     let tmpSelectPrefTag = prefTag;
     tmpSelectPrefTag = tmpSelectPrefTag.replaceAll("{$prefCd}", pf.pref_cd);

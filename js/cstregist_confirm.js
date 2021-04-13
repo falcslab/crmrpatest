@@ -51,9 +51,10 @@ $(document).ready(function () {
   });
   $("#backtocstinput").on("click", function () {
     // 顧客情報入力画面へ戻る
-
-    // 戻った時に入力していた値を保持していてほしい。。。
-    // tmpにも同じ顧客データを保存し、そのデータを引っ張り出す
-    window.location.href = "./cstregist_input.html" + "?cstId=" + cstId;
+    let urlPrm = ""
+    if (cstId != null) {
+      urlPrm = "?cstId=" + cstId;
+    }
+    window.location.href = "./cstregist_input.html" + urlPrm
   });
 });
