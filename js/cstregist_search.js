@@ -24,7 +24,7 @@ $(document).ready(function () {
       })
       .catch((error) => {
         $("#btncstsearch").prop("disabled", false);
-        console.error("検索エラー");
+        setWarnMsg("名寄せ検索結果が0件でした。")
       });
   });
   $("#btncstresist").on("click", function () {

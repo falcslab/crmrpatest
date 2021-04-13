@@ -18,7 +18,7 @@ function initdb() {
     pref: "&pref_cd",
     customer:
       "&cst_id, cst_name_fst, cst_name_lst, cst_name_kana_fst, cst_name_kana_lst, birthday, home_tel, mbl_tel",
-    app: "&app_id, cst_id",
+    app: "&app_id, cst_id, app_user_id",
     tmp: "++id, func_id, app_id, cst_id, login_id",
   });
 }
@@ -119,8 +119,14 @@ async function cstSearch(
   homeTel,
   mblTel
 ) {
-  let searchCol = { cst_name_fst: cstNameFst, cst_name_lst: cstNameLst };
-
+  // 申請ステータスが承認済のもののみ対象とする
+  let searchCol = { app_status: APP_APPROVED };
+  if (cstNameFst != "") {
+    searchCol.cst_name_fst = cstNameFst;
+  }
+  if (cstNameLst != "") {
+    searchCol.cst_name_lst = cstNameLst;
+  }
   if (cstNameKanaFst != "") {
     searchCol.cst_name_kana_fst = cstNameKanaFst;
   }
@@ -500,22 +506,21 @@ async function getNewCstId() {
 async function appSearch(appId, appDateFr, appDateTo) {
   let result = [];
 
-  await db.app.toArray()
-    .then((appList) => {
-      for (let ap of appList) {
-        if (appId != "") {
-          if (ap.app_id == appId) {
-            result.push(ap);
+  await db.app.where("app_user_id")
+    .notEqual(c_loginId)
+    .each((app) => {
+      if (appId != "") {
+        if (app.app_id == appId) {
+          result.push(app);
+        }
+      } else {
+        if (appDateFr != "" && appDateTo != "") {
+          if (app.app_date >= appDateFr && app.app_date <= appDateTo) {
+            result.push(app);
           }
         } else {
-          if (appDateFr != "" && appDateTo != "") {
-            if (ap.app_date >= appDateFr && ap.app_date <= appDateTo) {
-              result.push(ap);
-            }
-          } else {
-            // 検索項目すべてブランクの場合、全件表示
-            result.push(ap);
-          }
+          // 検索項目すべてブランクの場合、全件表示
+          result.push(app);
         }
       }
     });

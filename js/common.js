@@ -20,7 +20,10 @@ const APPDIV_CUSTOMERREGIST = "1";
 let headerTag =
   "<header><div><h1 class='title'>" +
   "<a class='display-4 systemtitle' href='./main.html'>顧客管理システム</a></h1></div>";
-
+let errorTag = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>{$errorMsg}" +
+  "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
+let warnTag = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>{$warnMsg}" +
+  "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
 let c_appId = "200000";
 let c_cstId = "100000";
 let c_loginId = "";
@@ -128,6 +131,30 @@ function setCstParam(funcId, cstInfo) {
   $("#addr2").val(cstInfo.addr2);
   $("#wkplace_name").val(cstInfo.wkplace_name);
   $("#wkplace_tel").val(cstInfo.wkplace_tel);
+}
+
+// ===============================================================
+// エラー表示
+// ===============================================================
+function setErrorMsg(errorMsg) {
+  errorTag = errorTag.replace("{$errorMsg}", errorMsg);
+  $("div.alert").remove();
+  $("#errorinfo").append(errorTag);
+
+  let pos = $("body").get(0).offsetTop;
+  $("body").animate({ scrollTop: pos }, 'fast');
+}
+
+// ===============================================================
+// 通知メッセージ表示
+// ===============================================================
+function setWarnMsg(warnMsg) {
+  warnTag = warnTag.replace("{$warnMsg}", warnMsg);
+  $("div.alert").remove();
+  $("#errorinfo").append(warnTag);
+
+  let pos = $("body").get(0).offsetTop;
+  $("body").animate({ scrollTop: pos }, 'fast');
 }
 
 // ===============================================================
