@@ -70,7 +70,7 @@ async function login(loginid, loginpw) {
 // ===============================================================
 // ログインデータがtmpテーブルに存在するかチェック
 // ===============================================================
-async function logincheck() {
+async function loginCheck() {
   const loginInfo = await db.tmp
     .get({
       func_id: FUNC_ID_LOGIN,
@@ -506,21 +506,22 @@ async function getNewCstId() {
 async function appSearch(appId, appDateFr, appDateTo) {
   let result = [];
 
-  await db.app.where("app_user_id")
-    .notEqual(c_loginId)
-    .each((app) => {
-      if (appId != "") {
-        if (app.app_id == appId) {
-          result.push(app);
-        }
-      } else {
-        if (appDateFr != "" && appDateTo != "") {
-          if (app.app_date >= appDateFr && app.app_date <= appDateTo) {
+  await db.app.toArray()
+    .then((appList) => {
+      for (let app of appList) {
+        if (appId != "") {
+          if (app.app_id == appId) {
             result.push(app);
           }
         } else {
-          // 検索項目すべてブランクの場合、全件表示
-          result.push(app);
+          if (appDateFr != "" && appDateTo != "") {
+            if (app.app_date >= appDateFr && app.app_date <= appDateTo) {
+              result.push(app);
+            }
+          } else {
+            // 検索項目すべてブランクの場合、全件表示
+            result.push(app);
+          }
         }
       }
     });

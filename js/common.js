@@ -17,9 +17,11 @@ const APP_APPROVED = "3";
 //申請区分 1:顧客登録
 const APPDIV_CUSTOMERREGIST = "1";
 
-let headerTag =
-  "<header><div><h1 class='title'>" +
-  "<a class='display-4 systemtitle' href='./main.html'>顧客管理システム</a></h1></div>";
+let headerTag = "<header class='bd-header bg-info py-3 d-flex align-items-stretch border-bottom border-info'>" +
+  "<div class='container-fluid d-flex align-items-center'><h1 class='d-flex align-items-center fs-4 text-white mb-0'>" +
+  "<div class='headertitle display-6'><a class='headertitle' href='./index.html'>顧客管理システム</a></h1>" +
+  "<a href='' class='ms-auto link-light' hreflang='ar'>DB初期化</a>{$loginInfoTag}</div></header>"
+let loginUserTag = "<div class='logininfo'>ログイン：{$loginName}</div>"
 let errorTag = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>{$errorMsg}" +
   "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
 let warnTag = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>{$warnMsg}" +
@@ -30,26 +32,39 @@ let c_loginId = "";
 let c_loginNm = "";
 
 $(function () {
-  $("#header").append(headerTag);
-  $("#footer").append(
-    "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
-  );
 
   const url = new URL(window.location.href);
   // ログイン画面以外の場合のみログインチェック;
   if (String(url).indexOf("index") == -1) {
-    logincheck()
+    loginCheck()
       .then((login) => {
-        c_loginId = login.login_id;
+        c_loginId = login.login_id
         c_loginNm = login.login_name
+      })
+      .then(() => {
+        loginUserTag = loginUserTag.replace("{$loginName}", c_loginNm)
+        if (c_loginNm != "") {
+          headerTag = headerTag.replace("{$loginInfoTag}", loginUserTag)
+        } else {
+          headerTag = headerTag.replace("{$loginInfoTag}", "")
+        }
+        $("#header").append(headerTag);
+        $("#footer").append(
+          "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
+        );
       })
       .catch((error) => {
         // tmpにログイン情報がない場合、または複数件ある場合
-        // エラーメッセージ表示させる？
         delTmpData(FUNC_ID_LOGIN);
-        // window.location.href = "./index.html";
       });
+  } else {
+    headerTag = headerTag.replace("{$loginInfoTag}", "")
+    $("#header").append(headerTag);
+    $("#footer").append(
+      "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
+    );
   }
+
 });
 
 function formatDate() {

@@ -18,6 +18,14 @@ $(document).ready(function () {
         $("#appaprv_complete").remove();
       }
 
+      // ログインユーザーが申請者の場合、差戻/承認ボタンを非表示
+      getTmpData(FUNC_ID_LOGIN).then((login) => {
+        if (appInfo.app_user_id == login[0].login_id) {
+          $("#appaprv_remand").remove();
+          $("#appaprv_complete").remove();
+        }
+      })
+
       getCstInfo(cstId).then((cstInfo) => {
         // パラメータ入力
         setCstParam(FUNC_ID_APP_CONFIRM, cstInfo);
@@ -28,7 +36,7 @@ $(document).ready(function () {
       });
     })
     .catch((error) => {
-      window.location.href = "./index.html";
+      // window.location.href = "./index.html";
     });
 
   $("#appaprv_complete").on("click", function () {
