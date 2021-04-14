@@ -101,7 +101,7 @@ function checkCstParam() {
     let res = false;
 
     const cstNameLst = $("#cst_name_lst").val()
-    const cstNameLst = $("#cst_name_lst").val()
+    const cstNameFst = $("#cst_name_fst").val()
     const cstNameKanaLst = $("#cst_name_kana_lst").val()
     const cstNameKanaFst = $("#cst_name_kana_fst").val()
     const birthDay = $("#birthday").val()
