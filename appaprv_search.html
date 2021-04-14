@@ -15,54 +15,54 @@
 <script type="text/javascript" src="./js/db/accessdb.js"></script>
 
 <head>
-  <meta charset="utf-8" />
-  <title>顧客管理テスト</title>
+    <meta charset="utf-8" />
+    <title>顧客管理テスト</title>
 </head>
 
 <body>
-  <div class="wrapper">
-    <div id="header"></div>
-    <div class="inputview">
-      <div class="display-6 subtitle">申請承認</div>
-      <div id="errorinfo"></div>
-      <div class="card search-cardbody">
-        <h5 class="card-title">申請情報検索</h5>
-        <p class="card-text">申請情報の検索を行います</p>
-        <ul class="list-search list-group list-group-flush">
-          <li class="list-group-item">
-            <div class="mb-3">
-              <label for="app_id" class="label form-label">申請ID</label>
-              <input type="text" class="form-control" id="app_id" placeholder="(例) 200000" required="required" />
+    <div class="wrapper">
+        <div id="header"></div>
+        <div class="inputview">
+            <div class="display-6 subtitle">申請承認</div>
+            <div id="errorinfo"></div>
+            <div class="card search-cardbody">
+                <h5 class="card-title">申請情報検索</h5>
+                <p class="card-text">申請情報の検索を行います</p>
+                <ul class="list-search list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="mb-3">
+                            <label for="app_id" class="label form-label">申請ID</label>
+                            <input type="text" class="form-control" id="app_id" placeholder="(例) 200000" required="required" />
+                        </div>
+                        <label for="app_date_fr" class="label form-label">申請日</label>
+                        <div class="mb-3 row">
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="app_date_fr" placeholder="(例) 1999/01/01" />
+                            </div>
+                            <div class="col-md-1 fromto">～</div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="app_date_to" placeholder="(例) 1999/01/01" />
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <label for="app_date_fr" class="label form-label">申請日</label>
-            <div class="mb-3 row">
-              <div class="col-md-4">
-                <input type="text" class="form-control" id="app_date_fr" placeholder="(例) 1999/01/01" />
-              </div>
-              <div class="col-md-1 fromto">～</div>
-              <div class="col-md-4">
-                <input type="text" class="form-control" id="app_date_to" placeholder="(例) 1999/01/01" />
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="tableview" id="appList"></div>
-    <div class="btn-form">
-      <div class="btn">
-        <button type="button" class="btn btn-custom btn-block" id="backtomain">
+        </div>
+        <div class="tableview" id="appList"></div>
+        <div class="btn-form">
+            <div class="btn">
+                <button type="button" class="btn btn-custom btn-block" id="backtomain">
           メインメニューに戻る
         </button>
-      </div>
-      <div class="btn">
-        <button type="button" class="btn btn-custom btn-block" id="btnappsearch">
+            </div>
+            <div class="btn">
+                <button type="button" class="btn btn-custom btn-block" id="btnappsearch">
           検索
         </button>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div id="footer"></div>
+    <div id="footer"></div>
 </body>
 
 </html>
