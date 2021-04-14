@@ -97,7 +97,6 @@ async function getPrefName(prefCd) {
 // ===============================================================
 async function delTmpData(funcId) {
     if (funcId === FUNC_ID_ALL) {
-        console.log("clearall")
         await db.tmp.clear()
             .catch((error) => {
                 console.error(error);

@@ -40,11 +40,11 @@ const ERRORMSG_WKPLACE_TEL_FORMAT = "勤務先電話番号のフォーマット�
 
 const ERRORMSG_SEARCH_NO_DATA = "該当データが0件でした。"
 
-let headerTag = "<header class='bd-header bg-info py-3 d-flex align-items-stretch border-bottom border-info'>" +
+const headerTag = "<header class='bd-header bg-info py-3 d-flex align-items-stretch border-bottom border-info'>" +
     "<div class='container-fluid d-flex align-items-center'><h1 class='d-flex align-items-center fs-4 text-white mb-0'>" +
-    "<div class='headertitle display-6'><a class='headertitle' href='./index.html'>顧客管理システム</a></h1>" +
-    "<a href='' class='ms-auto link-light' hreflang='ar'>DB初期化</a>{$loginInfoTag}</div></header>"
-let loginUserTag = "<div class='logininfo'>ログイン：{$loginName}</div>"
+    "<div class='headertitle display-6'><a class='headertitle' href='./index.html'>顧客管理システム</a></h1>{$initDBTag}{$loginInfoTag}</div></header>"
+const initDBTag = "<a href='' id='initdb' class='ms-auto link-light' hreflang='ar'>DB初期化</a>"
+const loginUserTag = "<div class='logininfo'>ログイン：{$loginName}</div>"
 const errorTag = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>{$errorMsg}" +
     "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
 const warnTag = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>{$warnMsg}" +
@@ -55,6 +55,9 @@ let c_loginId = "";
 let c_loginNm = "";
 
 $(function() {
+    // DB初期化リンクを非表示
+    let tmpHeaderTag = headerTag;
+    tmpHeaderTag = tmpHeaderTag.replace("{$initDBTag}", "")
 
     const url = new URL(window.location.href);
     // ログイン画面以外の場合のみログインチェック;
@@ -65,13 +68,14 @@ $(function() {
                 c_loginNm = login.login_name
             })
             .then(() => {
-                loginUserTag = loginUserTag.replace("{$loginName}", c_loginNm)
+                let tmploginUserTag = loginUserTag;
+                tmploginUserTag = tmploginUserTag.replace("{$loginName}", c_loginNm)
                 if (c_loginNm !== "") {
-                    headerTag = headerTag.replace("{$loginInfoTag}", loginUserTag)
+                    tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag)
                 } else {
-                    headerTag = headerTag.replace("{$loginInfoTag}", "")
+                    tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", "")
                 }
-                $("#header").append(headerTag);
+                $("#header").append(tmpHeaderTag);
                 $("#footer").append(
                     "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
                 );
@@ -81,13 +85,15 @@ $(function() {
                 delTmpData(FUNC_ID_LOGIN);
             });
     } else {
-        headerTag = headerTag.replace("{$loginInfoTag}", "")
-        $("#header").append(headerTag);
+        // ログイン画面の場合
+        let tmpheaderTag = headerTag;
+        tmpheaderTag = tmpheaderTag.replace("{$initDBTag}", initDBTag)
+        tmpheaderTag = tmpheaderTag.replace("{$loginInfoTag}", "")
+        $("#header").append(tmpheaderTag);
         $("#footer").append(
             "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
         );
     }
-
 });
 
 function formatDate() {

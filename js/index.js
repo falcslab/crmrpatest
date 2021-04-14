@@ -18,4 +18,12 @@ $(document).ready(function() {
                 $("#btnlogin").prop("disabled", false);
             });
     });
+    $("#initdb").on("click", function() {
+        //DB初期化
+        alert("DBを初期化します");
+        initdb();
+        alert("initdb完了");
+        bulkputdb();
+        alert("DBを初期化しました");
+    });
 });

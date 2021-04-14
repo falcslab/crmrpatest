@@ -23,7 +23,7 @@ a.systemtitle:hover {
 }
 
 .logininfo {
-    margin: auto 2.0rem;
+    margin: 0 2.5rem 0 auto;
     color: #fff;
 }
 
