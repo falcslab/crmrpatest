@@ -28,12 +28,17 @@ $(document).ready(function() {
         // 検索
         delTmpData(FUNC_ID_APP_SEARCH).then(() => {
             appSearch(appId, appDateFr, appDateTo).then((appList) => {
-                dispAppList(appList)
-                    // tmpテーブルに検索結果を一時保存
-                for (let ap of appList) {
-                    setTmpAppInfo(ap.app_id, FUNC_ID_APP_SEARCH)
-                }
-            })
+                    dispAppList(appList)
+                        // tmpテーブルに検索結果を一時保存
+                    for (let ap of appList) {
+                        setTmpAppInfo(ap.app_id, FUNC_ID_APP_SEARCH)
+                    }
+                })
+                .catch((error) => {
+                    $("#btnappsearch").prop("disabled", false);
+                    setWarnMsg(ERRORMSG_SEARCH_NO_DATA);
+                    return
+                })
         })
 
         $("#btnappsearch").prop("disabled", false);

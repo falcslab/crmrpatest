@@ -30,7 +30,7 @@ $(document).ready(function() {
             })
             .catch((error) => {
                 $("#btncstsearch").prop("disabled", false);
-                setWarnMsg("名寄せ検索結果が0件でした。");
+                setWarnMsg(ERRORMSG_SEARCH_NO_DATA);
             });
     });
     $("#btncstresist").on("click", function() {

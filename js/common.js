@@ -38,6 +38,8 @@ const ERRORMSG_MAILADDR_FORMAT = "メールアドレスのフォーマットが�
 const ERRORMSG_POST_CD_FORMAT = "郵便番号のフォーマットが正しくありません。"
 const ERRORMSG_WKPLACE_TEL_FORMAT = "勤務先電話番号のフォーマットが正しくありません。"
 
+const ERRORMSG_SEARCH_NO_DATA = "該当データが0件でした。"
+
 let headerTag = "<header class='bd-header bg-info py-3 d-flex align-items-stretch border-bottom border-info'>" +
     "<div class='container-fluid d-flex align-items-center'><h1 class='d-flex align-items-center fs-4 text-white mb-0'>" +
     "<div class='headertitle display-6'><a class='headertitle' href='./index.html'>顧客管理システム</a></h1>" +
@@ -208,7 +210,7 @@ function setErrorMsg(errorMsg) {
 // ===============================================================
 function setWarnMsg(warnMsg) {
     let tmpWarnTag = warnTag
-    tmpWarnTag = tmpWarnTag.replace("{$warnMsg}", warnTag);
+    tmpWarnTag = tmpWarnTag.replace("{$warnMsg}", warnMsg);
     $("div.alert").remove();
     $("#errorinfo").append(tmpWarnTag);
 

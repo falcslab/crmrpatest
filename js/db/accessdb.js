@@ -5,10 +5,10 @@ const cstListTag =
     "<td>{$homeTel}</td><td>{$mblTel}</td></tr>";
 const appTableTag =
     "<table class='table table-striped appList'><thead><tr><th>#</th><th>申請ID</th><th>承認区分</th><th>申請ステータス</th>" +
-    "<th>申請ユーザー</th><th>申請日</th></tr></thead><tbody></tbody></table>";
+    "<th>申請者</th><th>申請日</th><th>承認者</th><th>承認日</th></tr></thead><tbody></tbody></table>";
 const appListTag =
     "<tr><th>{$no}</th><td><a href='./appaprv_confirm.html?appId={$appId}' name='appIdlink'>{$appId}</button></td><td>{$aprvDivName}</td>" +
-    "<td>{$appStatusName}</td><td>{$appUserName}</td><td>{$appDate}</td>";
+    "<td>{$appStatusName}</td><td>{$appUserName}</td><td>{$appDate}</td><td>{$aprvUserName}</td><td>{$aprvDate}</td>";
 const prefTag =
     "<option id='prefcd_{$prefCd}' value={$prefCd}>{$prefName}</option>";
 
@@ -257,12 +257,11 @@ async function setCstInfo(funcId) {
     } else {
         // 顧客マスタからcst_idのMax値+1を取得
         await getNewCstId().then((maxCstId) => {
-            if (maxCstId !== "") {
-                cstId = String(Number(maxCstId) + 1);
-            } else {
-                cstId = c_cstId;
-            }
-        });
+            cstId = String(Number(maxCstId) + 1);
+        }).catch((error) => {
+            //顧客マスタ0件の場合
+            cstId = c_cstId;
+        })
     }
 
     // 顧客マスタに更新 or 登録
@@ -373,12 +372,11 @@ async function setAppInfo(funcId) {
     // 申請テーブルからapp_idのMax値+1を取得
     let appId = "";
     await getNewAppId().then((maxAppId) => {
-        if (maxAppId !== "") {
-            appId = String(Number(maxAppId) + 1);
-        } else {
-            appId = c_appId;
-        }
-    });
+        appId = String(Number(maxAppId) + 1);
+    }).catch((error) => {
+        // 申請データ0件の場合
+        appId = c_appId;
+    })
 
     // 申請テーブル登録
     await db.app
@@ -389,7 +387,8 @@ async function setAppInfo(funcId) {
             app_date: formatDate(),
             app_user_id: c_loginId,
             aprv_div: APPDIV_CUSTOMERREGIST,
-            aprv_date: ""
+            aprv_date: "",
+            aprv_user_id: ""
         })
         .catch((error) => {
             throw new Error("顧客情報更新失敗");
@@ -549,12 +548,17 @@ async function dispAppList(appList) {
     for (let ap of appList) {
         // パラメータ置換
         let appUserName = "";
+        let aprvUserName = "";
         await getUserData(ap.app_user_id).then((user) => {
             appUserName = user.login_name;
+        }).catch((error) => {
+            // 該当するユーザーが見つからなかった場合
         });
-        if (appUserName === "") {
-            break;
-        }
+        await getUserData(ap.aprv_user_id).then((user) => {
+            aprvUserName = user.login_name;
+        }).catch((error) => {
+            // 該当するユーザーが見つからなかった場合
+        });
 
         let tmpTag = appListTag;
         tmpTag = tmpTag.replace("{$no}", i + 1);
@@ -566,6 +570,8 @@ async function dispAppList(appList) {
         );
         tmpTag = tmpTag.replace("{$appUserName}", appUserName);
         tmpTag = tmpTag.replace("{$appDate}", ap.app_date);
+        tmpTag = tmpTag.replace("{$aprvUserName}", aprvUserName);
+        tmpTag = tmpTag.replace("{$aprvDate}", ap.aprv_date);
 
         $("tbody").append(tmpTag);
         i++;
