@@ -111,10 +111,10 @@ function checkCstParam() {
     const postCd = $("#post_cd").val()
     const wkplaceTel = $("#wkplace_tel").val()
 
-    if (cstNameLst !== "") {
+    if (cstNameLst === "") {
         errorMsg = addMsg(errorMsg, ERRORMSG_NAME_LST_REQUIRED)
     }
-    if (cstNameFst !== "") {
+    if (cstNameFst === "") {
         errorMsg = addMsg(errorMsg, ERRORMSG_NAME_FST_REQUIRED)
     }
     if (cstNameKanaLst !== "") {
