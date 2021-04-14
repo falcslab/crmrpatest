@@ -69,7 +69,6 @@ function checkSearchParam() {
     if (appId !== "" && !checkAppId(appId)) {
         errorMsg = addMsg(errorMsg, ERRORMSG_APP_ID_FORMAT)
     }
-    console.log(errorMsg)
     if (errorMsg !== "") {
         $("div.alert").remove();
         setErrorMsg(errorMsg);
