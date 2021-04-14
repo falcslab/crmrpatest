@@ -55,7 +55,7 @@ function checkSearchParam() {
     const mblTel = $("#mbl_tel").val()
 
     if (cstNameLst === "") {
-        errorMsg = errorMsg + ERRORMSG_NAME_LST_REQUIRED
+        errorMsg = addMsg(errorMsg, ERRORMSG_NAME_LST_REQUIRED)
     }
     if (cstNameKanaLst !== "" && !checkKana(cstNameKanaLst)) {
         errorMsg = addMsg(errorMsg, ERRORMSG_KANA_LST_FORMAT)
@@ -73,6 +73,7 @@ function checkSearchParam() {
         errorMsg = addMsg(errorMsg, ERRORMSG_MBL_TEL_FORMAT)
     }
     if (errorMsg !== "") {
+        $("div.alert").remove();
         setErrorMsg(errorMsg);
     } else {
         res = true;

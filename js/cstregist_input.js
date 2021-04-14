@@ -100,6 +100,8 @@ function checkCstParam() {
     let errorMsg = "";
     let res = false;
 
+    const cstNameLst = $("#cst_name_lst").val()
+    const cstNameLst = $("#cst_name_lst").val()
     const cstNameKanaLst = $("#cst_name_kana_lst").val()
     const cstNameKanaFst = $("#cst_name_kana_fst").val()
     const birthDay = $("#birthday").val()
@@ -109,14 +111,20 @@ function checkCstParam() {
     const postCd = $("#post_cd").val()
     const wkplaceTel = $("#wkplace_tel").val()
 
-    if (cstNameKanaLst !== "") {
-        if (!checkKana(cstNameKanaLst)) {
-            errorMsg = errorMsg + ERRORMSG_KANA_LST_FORMAT
-        }
-    } else {
-        errorMsg = errorMsg + ERRORMSG_KANA_LST_REQUIRED
+    if (cstNameLst !== "") {
+        errorMsg = addMsg(errorMsg, ERRORMSG_NAME_LST_REQUIRED)
+    }
+    if (cstNameFst !== "") {
+        errorMsg = addMsg(errorMsg, ERRORMSG_NAME_FST_REQUIRED)
     }
     if (cstNameKanaLst !== "") {
+        if (!checkKana(cstNameKanaLst)) {
+            errorMsg = addMsg(errorMsg, ERRORMSG_KANA_LST_FORMAT)
+        }
+    } else {
+        errorMsg = addMsg(errorMsg, ERRORMSG_KANA_LST_REQUIRED)
+    }
+    if (cstNameKanaFst !== "") {
         if (!checkKana(cstNameKanaFst)) {
             errorMsg = addMsg(errorMsg, ERRORMSG_KANA_FST_FORMAT)
         }
@@ -158,6 +166,7 @@ function checkCstParam() {
         errorMsg = addMsg(errorMsg, ERRORMSG_WKPLACE_TEL_FORMAT)
     }
     if (errorMsg !== "") {
+        $("div.alert").remove();
         setErrorMsg(errorMsg);
     } else {
         res = true;

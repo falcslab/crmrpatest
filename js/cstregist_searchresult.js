@@ -1,6 +1,8 @@
 $(document).ready(function() {
     initdb();
 
+    $("div.alert").remove();
+
     getCstSearchResult().catch(() => {
         window.location.href = "./index.html";
     });

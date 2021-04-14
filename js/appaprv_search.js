@@ -19,11 +19,17 @@ $(document).ready(function() {
         // ボタン連打対策
         $("#btnappsearch").prop("disabled", true);
 
+        if (!checkSearchParam()) {
+            $("#btnappsearch").prop("disabled", false);
+            return
+        }
+
         const appId = $("#app_id").val();
         const appDateFr = $("#app_date_fr").val();
         const appDateTo = $("#app_date_to").val();
 
         $("table").remove();
+        $("div.alert").remove();
 
         // 検索
         delTmpData(FUNC_ID_APP_SEARCH).then(() => {
@@ -53,3 +59,22 @@ $(document).ready(function() {
     });
 
 });
+
+function checkSearchParam() {
+    let errorMsg = "";
+    let res = false;
+
+    const appId = $("#app_id").val()
+
+    if (appId !== "" && !checkAppId(appId)) {
+        errorMsg = addMsg(errorMsg, ERRORMSG_APP_ID_FORMAT)
+    }
+    console.log(errorMsg)
+    if (errorMsg !== "") {
+        $("div.alert").remove();
+        setErrorMsg(errorMsg);
+    } else {
+        res = true;
+    }
+    return res;
+}
