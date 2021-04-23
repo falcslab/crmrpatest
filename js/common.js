@@ -61,40 +61,35 @@ $(function() {
     tmpHeaderTag = tmpHeaderTag.replace("{$initDBTag}", "")
 
     const url = new URL(window.location.href);
-    // ログイン画面以外の場合のみログインチェック;
-    if (String(url).indexOf("index") === -1) {
-        loginCheck()
-            .then((login) => {
-                c_loginId = login.login_id
-                c_loginNm = login.login_name
-            })
-            .then(() => {
-                let tmploginUserTag = loginUserTag;
-                tmploginUserTag = tmploginUserTag.replace("{$loginName}", c_loginNm)
-                if (c_loginNm !== "") {
-                    tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag)
-                } else {
-                    tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", "")
-                }
-                $("#header").append(tmpHeaderTag);
-                $("#footer").append(
-                    "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
-                );
-            })
-            .catch((error) => {
-                // tmpにログイン情報がない場合、または複数件ある場合
-                delTmpData(FUNC_ID_LOGIN);
-            });
-    } else {
-        // ログイン画面の場合
-        let tmpheaderTag = headerTag;
-        tmpheaderTag = tmpheaderTag.replace("{$initDBTag}", initDBTag)
-        tmpheaderTag = tmpheaderTag.replace("{$loginInfoTag}", "")
-        $("#header").append(tmpheaderTag);
-        $("#footer").append(
-            "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
-        );
-    }
+    loginCheck()
+        .then((login) => {
+            c_loginId = login.login_id
+            c_loginNm = login.login_name
+        })
+        .then(() => {
+            let tmploginUserTag = loginUserTag;
+            tmploginUserTag = tmploginUserTag.replace("{$loginName}", c_loginNm)
+            if (c_loginNm !== "") {
+                tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag)
+            } else {
+                tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", "")
+            }
+            $("#header").append(tmpHeaderTag);
+            $("#footer").append(
+                "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
+            );
+        })
+        .catch((error) => {
+            // tmpにログイン情報がない場合、または複数件ある場合
+            delTmpData(FUNC_ID_LOGIN);
+            // ログイン画面の場合
+            tmpHeaderTag = tmpHeaderTag.replace("{$initDBTag}", initDBTag)
+            tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", "")
+            $("#header").append(tmpHeaderTag);
+            $("#footer").append(
+                "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
+            );
+        });
 });
 
 function formatDate() {
