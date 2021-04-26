@@ -1,0 +1,46 @@
+<html lang="ja">
+<link rel="stylesheet" href="./css/style.css" />
+<link rel="stylesheet" href="./css/bootstrap-5.0.0/bootstrap.min.css" />
+<script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
+<script type="text/javascript" src="./js/cstregist_complete.js"></script>
+<script type="text/javascript" src="./js/db/db_m_user.js"></script>
+<script type="text/javascript" src="./js/db/db_m_pref.js"></script>
+<script type="text/javascript" src="./js/db/db_m_customer.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/db/accessdb.js"></script>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Falcs,LLC.">
+    <title>顧客管理テスト</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="header"></div>
+        <div class="tableview">
+            <div class="display-6 subtitle">顧客情報登録 申請完了</div>
+            <div id="errorinfo"></div>
+            <dl>
+                <dd class="registresult">
+                    <div class="iddisp">顧客登録の申請が完了しました。</div>
+                    <div class="iddisp">申請ID：<span class="iddisp" id="newappid"></span></div>
+                    <div class="iddisp">顧客ID：<span class="iddisp" id="cstid"></span></div>
+                </dd>
+            </dl>
+            <div class="btn-form">
+                <div class="btn">
+                    <button type="button" class="btn btn-custom btn-block" id="backtomain">
+            メインメニューに戻る
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="footer"></div>
+</body>
+
+</html>
