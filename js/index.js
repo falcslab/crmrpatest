@@ -22,7 +22,7 @@ $(document).ready(function () {
   // DB初期化
   $("#initdb").on("click", function () {
     let ans = window.confirm(
-      "本当にDBを初期化しますか？n※顧客、申請情報がすべて削除されます。"
+      "本当にDBを初期化しますか？\n※顧客、申請情報がすべて削除されます。"
     );
     if (ans) {
       delTmpData()
