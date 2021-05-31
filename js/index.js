@@ -34,7 +34,7 @@ $(document).ready(function () {
           bulkputdb();
         })
         .then(() => {
-          alert("DBを初期化しました。ログイン画面に戻ります。");
+          alert("DBを初期化しました。");
         })
         .then(() => {
           // ログイン画面へ
