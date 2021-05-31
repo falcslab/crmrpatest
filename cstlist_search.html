@@ -1,0 +1,75 @@
+<html lang="ja">
+<link rel="stylesheet" href="./css/style.css" />
+<link rel="stylesheet" href="./css/bootstrap-5.0.0/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="./css/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.min.css" />
+<script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="./js/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="./js/bootstrap-datepicker-1.9.0-dist/bootstrap-datepicker.ja.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
+<script type="text/javascript" src="./js/cstlist_search.js"></script>
+<script type="text/javascript" src="./js/db/db_m_user.js"></script>
+<script type="text/javascript" src="./js/db/db_m_pref.js"></script>
+<script type="text/javascript" src="./js/db/db_m_customer.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/db/accessdb.js"></script>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Falcs,LLC.">
+    <title>顧客管理テスト</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="header"></div>
+        <div class="inputview">
+            <div class="display-6 subtitle">顧客照会</div>
+            <div id="errorinfo"></div>
+            <div class="card search-cardbody">
+                <h5 class="card-title">顧客情報検索</h5>
+                <p class="card-text">顧客情報の検索を行います</p>
+                <ul class="list-search list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="mb-3">
+                            <label for="app_id" class="label form-label">顧客ID</label>
+                            <input type="text" class="form-control" id="cst_id" placeholder="(例) 100000" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="cst_name_lst" class="label form-label required">氏名（姓）</label>
+                            <input type="text" class="form-control" id="cst_name_lst" placeholder="(例) 山田" value="テスト" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="cst_name_fst" class="label form-label">氏名（名）</label>
+                            <input type="text" class="form-control" id="cst_name_fst" placeholder="(例) 太郎" value="太郎" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="cst_name_kana_lst" class="label form-label">氏名カナ（姓）</label>
+                            <input type="text" class="form-control" id="cst_name_kana_lst" placeholder="(例) ヤマダ" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="cst_name_kana_fst" class="label form-label">氏名カナ（名）</label>
+                            <input type="text" class="form-control" id="cst_name_kana_fst" placeholder="(例) タロウ" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tableview" id="cstList"></div>
+        <div class="btn-form">
+            <div class="btn">
+                <button type="button" class="btn btn-custom btn-block" id="backtomain">
+          メインメニューに戻る
+        </button>
+            </div>
+            <div class="btn">
+                <button type="button" class="btn btn-custom btn-block" id="btncstlistsearch">
+          検索
+        </button>
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+</body>
+
+</html>

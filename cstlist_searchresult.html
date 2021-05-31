@@ -1,0 +1,55 @@
+<html lang="ja">
+<link rel="stylesheet" href="./css/style.css" />
+<link rel="stylesheet" href="./css/bootstrap-5.0.0/bootstrap.min.css" />
+<script type="text/javascript" src="./js/bootstrap-5.0.0/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="./js/jquery/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/dexie@3.0.2/dist/dexie.min.js"></script>
+<script type="text/javascript" src="./js/cstlist_searchresult.js"></script>
+<script type="text/javascript" src="./js/db/db_m_user.js"></script>
+<script type="text/javascript" src="./js/db/db_m_pref.js"></script>
+<script type="text/javascript" src="./js/db/db_m_customer.js"></script>
+<script type="text/javascript" src="./js/common.js"></script>
+<script type="text/javascript" src="./js/db/accessdb.js"></script>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Falcs,LLC.">
+    <title>顧客管理テスト</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div id="header"></div>
+        <div class="tableview">
+            <div class="display-6 subtitle">顧客照会 検索結果</div>
+            <div id="errorinfo"></div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>顧客ID</th>
+                        <th>氏名（姓）</th>
+                        <th>氏名（名）</th>
+                        <th>氏名カナ（姓）</th>
+                        <th>氏名カナ（名）</th>
+                        <th>生年月日</th>
+                        <th>自宅電話番号</th>
+                        <th>携帯電話番号</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="btn-form">
+                <div class="btn">
+                    <button type="button" class="btn btn-custom btn-block" id="backtosearch">
+            顧客検索に戻る
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="footer"></div>
+</body>
+
+</html>
