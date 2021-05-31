@@ -7,6 +7,7 @@ header {
 .headertitle {
     font-size: 2.0rem !important;
     margin-left: 1.5rem;
+    margin: 0 auto 0 1.5rem;
 }
 
 a.headertitle {
@@ -25,6 +26,10 @@ a.systemtitle:hover {
 .logininfo {
     margin: 0 2.5rem 0 auto;
     color: #fff;
+}
+
+.initdbbtn {
+    margin-top: 4.0rem;
 }
 
 .tableview {
@@ -60,7 +65,7 @@ a.systemtitle:hover {
 }
 
 .wrapper {
-    min-height: 100vh;
+    min-height: 90vh;
     position: relative;
     padding-bottom: 120px;
     box-sizing: border-box;
