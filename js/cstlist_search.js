@@ -26,6 +26,22 @@ $(document).ready(function () {
         setWarnMsg(ERRORMSG_SEARCH_NO_DATA);
       });
   });
+
+  // 顧客IDに値が入力されている場合は氏名入力欄はDisabled
+  $("#cst_id").keyup(function () {
+    if ($("#cst_id").val() != "") {
+      $("#cst_name_fst").prop("disabled", true);
+      $("#cst_name_lst").prop("disabled", true);
+      $("#cst_name_kana_fst").prop("disabled", true);
+      $("#cst_name_kana_lst").prop("disabled", true);
+    } else {
+      $("#cst_name_fst").prop("disabled", false);
+      $("#cst_name_lst").prop("disabled", false);
+      $("#cst_name_kana_fst").prop("disabled", false);
+      $("#cst_name_kana_lst").prop("disabled", false);
+    }
+  });
+
   $("#backtomain").on("click", function () {
     // メインメニューに戻る
     window.location.href = "./main.html";

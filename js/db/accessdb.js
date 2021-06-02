@@ -149,18 +149,19 @@ async function cstListSearch(
 
   if (cstId !== "") {
     searchCol.cst_id = cstId;
-  }
-  if (cstNameFst !== "") {
-    searchCol.cst_name_fst = cstNameFst;
-  }
-  if (cstNameLst !== "") {
-    searchCol.cst_name_lst = cstNameLst;
-  }
-  if (cstNameKanaFst !== "") {
-    searchCol.cst_name_kana_fst = cstNameKanaFst;
-  }
-  if (cstNameKanaLst !== "") {
-    searchCol.cst_name_kana_lst = cstNameKanaLst;
+  } else {
+    if (cstNameFst !== "") {
+      searchCol.cst_name_fst = cstNameFst;
+    }
+    if (cstNameLst !== "") {
+      searchCol.cst_name_lst = cstNameLst;
+    }
+    if (cstNameKanaFst !== "") {
+      searchCol.cst_name_kana_fst = cstNameKanaFst;
+    }
+    if (cstNameKanaLst !== "") {
+      searchCol.cst_name_kana_lst = cstNameKanaLst;
+    }
   }
 
   let result = [];
