@@ -93,15 +93,23 @@ $(function () {
       );
     })
     .catch((error) => {
-      // tmpにログイン情報がない場合、または複数件ある場合
       delTmpData(FUNC_ID_LOGIN);
-      // ログイン画面の場合
-      tmploginUserTag = tmploginUserTag.replace("{$loginName}", "");
-      tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag);
-      $("#header").append(tmpHeaderTag);
-      $("#footer").append(
-        "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
-      );
+
+      let url = window.location.href;
+      // アクセス先がログイン画面か判定（直アクセス防止）
+      if (url.indexOf("index.html") == -1) {
+        delTmpData(FUNC_ID_LOGIN);
+        // ログイン画面へ
+        window.location.href = "./index.html";
+      } else {
+        // ログイン画面の場合
+        tmploginUserTag = tmploginUserTag.replace("{$loginName}", "");
+        tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag);
+        $("#header").append(tmpHeaderTag);
+        $("#footer").append(
+          "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
+        );
+      }
     });
 });
 
