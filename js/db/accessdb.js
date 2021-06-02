@@ -21,7 +21,7 @@ function initdb() {
     user: "&login_id, login_pw",
     pref: "&pref_cd",
     customer:
-      "&cst_id, cst_name_fst, cst_name_lst, cst_name_kana_fst, cst_name_kana_lst, birthday, home_tel, mbl_tel",
+      "&cst_id, cst_name_fst, cst_name_lst, cst_name_kana_fst, cst_name_kana_lst, birthday, home_tel, mbl_tel, app_status",
     app: "&app_id, cst_id, app_user_id",
     tmp: "++id, func_id, app_id, cst_id, login_id",
   });
@@ -164,12 +164,14 @@ async function cstListSearch(
   }
 
   let result = [];
-  await db.customer.where(searchCol).each((cst) => {
-    result.push(cst);
-  });
-  if (result.length === 0) {
-    console.error("検索結果0件");
-  }
+  await db.customer
+    .where(searchCol)
+    .each((cst) => {
+      result.push(cst);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
   // 検索結果画面に紐付くtmpデータを削除
   await db.tmp
@@ -265,12 +267,14 @@ async function cstSearch(
   }
 
   let result = [];
-  await db.customer.where(searchCol).each((cst) => {
-    result.push(cst);
-  });
-  if (result.length === 0) {
-    console.error("検索結果0件");
-  }
+  await db.customer
+    .where(searchCol)
+    .each((cst) => {
+      result.push(cst);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
   // 検索結果画面に紐付くtmpデータを削除
   await db.tmp

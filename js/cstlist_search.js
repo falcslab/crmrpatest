@@ -36,12 +36,12 @@ function checkSearchParam() {
   let errorMsg = "";
   let res = false;
 
-  const cstNameLst = $("#cst_name_lst").val();
+  const cstId = $("#cst_id").val();
   const cstNameKanaLst = $("#cst_name_kana_lst").val();
   const cstNameKanaFst = $("#cst_name_kana_fst").val();
 
-  if (cstNameLst === "") {
-    errorMsg = addMsg(errorMsg, ERRORMSG_NAME_LST_REQUIRED);
+  if (cstId !== "" && !checkCstId(cstId)) {
+    errorMsg = addMsg(errorMsg, ERRORMSG_CST_ID_FORMAT);
   }
   if (cstNameKanaLst !== "" && !checkKana(cstNameKanaLst)) {
     errorMsg = addMsg(errorMsg, ERRORMSG_KANA_LST_FORMAT);

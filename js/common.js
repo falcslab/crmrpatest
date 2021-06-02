@@ -45,6 +45,7 @@ const ERRORMSG_MAILADDR_FORMAT =
 const ERRORMSG_POST_CD_FORMAT = "郵便番号のフォーマットが正しくありません。";
 const ERRORMSG_WKPLACE_TEL_FORMAT =
   "勤務先電話番号のフォーマットが正しくありません。";
+const ERRORMSG_CST_ID_FORMAT = "顧客番号のフォーマットが正しくありません。";
 const ERRORMSG_APP_ID_FORMAT = "申請番号のフォーマットが正しくありません。";
 
 const ERRORMSG_SEARCH_NO_DATA = "該当データが0件でした。";
@@ -288,6 +289,17 @@ function checkMail(prm) {
 
   let res = false;
   if (mailres !== null) {
+    res = true;
+  }
+  return res;
+}
+
+// 顧客番号チェック
+function checkCstId(prm) {
+  let numptn = /^[1-9]{1}[0-9]+$/;
+  let numres = prm.match(numptn);
+  let res = false;
+  if (numres !== null) {
     res = true;
   }
   return res;
