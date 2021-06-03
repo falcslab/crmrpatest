@@ -102,6 +102,7 @@ $(function () {
       let url = window.location.href;
       // アクセス先がログイン画面か判定（直アクセス防止）
       if (url.indexOf("index.html") == -1) {
+        alert("直アクセスエラー");
         delTmpData(FUNC_ID_LOGIN);
         // ログイン画面へ
         window.location.href = "./index.html";
