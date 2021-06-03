@@ -421,7 +421,7 @@ async function setCstInfo(funcId) {
       addr2: tmpCstInfo.addr2,
       wkplace_name: tmpCstInfo.wkplace_name,
       wkplace_tel: tmpCstInfo.wkplace_tel,
-      app_status: "",
+      app_status: APP_BEFAPPR,
       aprv_user_id: "",
       aprv_date: "",
     })
