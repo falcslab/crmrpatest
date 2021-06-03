@@ -167,14 +167,18 @@ function setCstParam(funcId, cstInfo) {
   if (funcId === FUNC_ID_CSTREGIST_CONFIRM || funcId === FUNC_ID_APP_CONFIRM) {
     if (cstInfo.sex === "1") {
       $("#sex").val("男");
-    } else {
+    } else if (cstInfo.sex === "2") {
       $("#sex").val("女");
+    } else {
+      $("#sex").val("不明");
     }
   } else {
     if (cstInfo.sex === "1") {
       $("input:radio[name='radio_sex']").val(["1"]);
-    } else {
+    } else if (cstInfo.sex === "2") {
       $("input:radio[name='radio_sex']").val(["2"]);
+    } else {
+      $("input:radio[name='radio_sex']").val(["3"]);
     }
   }
   $("#birthday").val(cstInfo.birthday);
