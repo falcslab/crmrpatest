@@ -1,4 +1,5 @@
-const db = new Dexie("cmsRPATest");
+const dbName = "cmsRPATest";
+const db = new Dexie(dbName);
 const cstListTag =
   "<tr><th>{$no}</th><td><a href='./cstregist_input.html?cstId={$cstId}' name='cstIdlink'>{$cstId}</button></td><td>{$cstNameLst}</td><td>{$cstNameFst}</td>" +
   "<td>{$cstNameKanaLst}</td><td>{$cstNameKanaFst}</td><td>{$birthDay}</td>" +
@@ -27,18 +28,29 @@ function initdb() {
   });
 }
 
-function bulkputdb() {
-  db.user.bulkPut(m_user).catch((error) => {
+async function bulkputdb() {
+  await db.user.bulkPut(m_user).catch((error) => {
     console.error(error);
   });
 
-  db.pref.bulkPut(m_pref).catch((error) => {
+  await db.pref.bulkPut(m_pref).catch((error) => {
     console.error(error);
   });
 
-  db.customer.bulkPut(m_customer).catch((error) => {
-    console.error(error);
-  });
+  // デフォルトのデータが入っていたらbulkputしない
+  const cstList = [];
+  await db.customer
+    .where("cst_id")
+    .equals("100000")
+    .each((cst) => {
+      cstList.push(cst);
+    });
+
+  if (cstList.length == 0) {
+    await db.customer.bulkPut(m_customer).catch((error) => {
+      console.error(error);
+    });
+  }
 }
 
 // ===============================================================
@@ -104,20 +116,6 @@ async function loginCheck() {
 
   return loginInfo;
 }
-
-// ===============================================================
-// 直アクセスチェック
-// ===============================================================
-// async function directAccessCheck(funcId) {
-//   await db.tmp
-//     .get({
-//       func_id: funcId,
-//     })
-//     .catch((error) => {
-//       // tmpに当該funcIdのデータがない場合はログイン画面へ
-//       throw new Error("ログインエラー");
-//     });
-// }
 
 // ===============================================================
 // prefCdに紐つく都道府県名を取得

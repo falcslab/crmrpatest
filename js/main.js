@@ -1,6 +1,5 @@
 $(document).ready(function () {
   initdb();
-  bulkputdb();
 
   $("#custinquiry").on("click", function () {
     // ボタン連打対策
