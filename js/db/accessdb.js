@@ -326,6 +326,11 @@ async function getCstSearchResult() {
     });
   if (tmpArr.length === 0) {
     throw new Error("検索結果0件");
+  } else {
+    // 検索結果件数をメッセージに埋め込む
+    let infoMsg = INFOMSG_SEARCH_DATA_COUNT;
+    infoMsg = infoMsg.replace("{$count}", tmpArr.length);
+    setInfoMsg(infoMsg);
   }
 
   // 画面表示用にパラメータ変換

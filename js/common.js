@@ -49,6 +49,7 @@ const ERRORMSG_CST_ID_FORMAT = "顧客番号のフォーマットが正しくあ
 const ERRORMSG_APP_ID_FORMAT = "申請番号のフォーマットが正しくありません。";
 
 const ERRORMSG_SEARCH_NO_DATA = "該当データが0件でした。";
+const INFOMSG_SEARCH_DATA_COUNT = "該当データが{$count}件ヒットしました。";
 
 const headerTag =
   "<header class='bd-header bg-info py-3 d-flex align-items-stretch border-bottom border-info'>" +
@@ -60,6 +61,9 @@ const errorTag =
   "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
 const warnTag =
   "<div class='alert alert-warning alert-dismissible fade show' role='alert'>{$warnMsg}" +
+  "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
+const infoTag =
+  "<div class='alert alert-info alert-dismissible fade show' role='alert'>{$infoMsg}" +
   "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>";
 let c_appId = "200000";
 let c_cstId = "100000";
@@ -216,13 +220,26 @@ function setCstTestData() {
 }
 
 // ===============================================================
-// エラー表示
+// エラーメッセージ表示
 // ===============================================================
 function setErrorMsg(errorMsg) {
   let tmpErrorTag = errorTag;
   tmpErrorTag = tmpErrorTag.replace("{$errorMsg}", errorMsg);
 
-  $("#errorinfo").append(tmpErrorTag);
+  $("#info").append(tmpErrorTag);
+
+  let pos = $("body").get(0).offsetTop;
+  $("body").animate({ scrollTop: pos }, "fast");
+}
+
+// ===============================================================
+// 警告メッセージ表示
+// ===============================================================
+function setWarnMsg(warnMsg) {
+  let tmpWarnTag = warnTag;
+  tmpWarnTag = tmpWarnTag.replace("{$warnMsg}", warnMsg);
+
+  $("#info").append(tmpWarnTag);
 
   let pos = $("body").get(0).offsetTop;
   $("body").animate({ scrollTop: pos }, "fast");
@@ -231,11 +248,11 @@ function setErrorMsg(errorMsg) {
 // ===============================================================
 // 通知メッセージ表示
 // ===============================================================
-function setWarnMsg(warnMsg) {
-  let tmpWarnTag = warnTag;
-  tmpWarnTag = tmpWarnTag.replace("{$warnMsg}", warnMsg);
+function setInfoMsg(infoMsg) {
+  let tmpInfoTag = infoTag;
+  tmpInfoTag = tmpInfoTag.replace("{$infoMsg}", infoMsg);
 
-  $("#errorinfo").append(tmpWarnTag);
+  $("#info").append(tmpInfoTag);
 
   let pos = $("body").get(0).offsetTop;
   $("body").animate({ scrollTop: pos }, "fast");
