@@ -72,49 +72,38 @@ async function delAppData() {
 }
 
 // ===============================================================
+// ログイン実施
+// ===============================================================
+async function login(loginid, loginpw) {
+  let loginName = "";
+  await db.user
+    .get({ login_id: loginid, login_pw: loginpw })
+    .then((user) => {
+      loginName = user.login_name;
+    })
+    .then(() => {
+      // セッションにログイン情報をセット
+      sessionStorage.setItem(
+        "login_info",
+        JSON.stringify({
+          login_id: loginid,
+          login_pw: loginpw,
+          login_name: loginName,
+        })
+      );
+    })
+    .catch(() => {
+      throw new Error("該当ユーザーなし");
+    });
+}
+
+// ===============================================================
 // userIdに紐つくユーザー情報を取得
 // ===============================================================
 async function getUserData(userId) {
   return await db.user.get({ login_id: userId }).catch((error) => {
     throw new Error("該当ユーザーなし");
   });
-}
-
-// ===============================================================
-// ログイン実施
-// ===============================================================
-async function login(loginid, loginpw) {
-  const loginuser = await db.user
-    .get({ login_id: loginid, login_pw: loginpw })
-    .catch(() => {
-      throw new Error("該当ユーザーなし");
-    });
-  db.tmp
-    .add({
-      func_id: FUNC_ID_LOGIN,
-      login_id: loginuser.login_id,
-      login_name: loginuser.login_name,
-    })
-    .catch((error) => {
-      // tmpに複数レコードログイン情報がある場合はログインエラー
-      throw new Error("ログインエラー");
-    });
-}
-
-// ===============================================================
-// ログインデータがtmpテーブルに存在するかチェック
-// ===============================================================
-async function loginCheck() {
-  const loginInfo = await db.tmp
-    .get({
-      func_id: FUNC_ID_LOGIN,
-    })
-    .catch((error) => {
-      // tmpにログイン情報がない場合はログインエラー
-      throw new Error("ログインエラー");
-    });
-
-  return loginInfo;
 }
 
 // ===============================================================

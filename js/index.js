@@ -5,17 +5,22 @@ $(document).ready(function () {
 
   // tmpに保存された情報を全削除
   delTmpData(FUNC_ID_ALL);
+  // セッション情報を削除
+  sessionStorage.clear();
 
   $("#btnlogin").on("click", function () {
     // ボタン連打対策
     $("#btnlogin").prop("disabled", true);
+
+    // ログイン実施
     login($("#loginid").val(), $("#loginpw").val())
       .then(() => {
         window.location.href = "./main.html";
       })
-      .catch((error) => {
+      .catch(() => {
         // 該当ユーザーが存在しない場合
         $("#btnlogin").prop("disabled", false);
+        setErrorMsg(ERRORMSG_LOGIN_DENIED);
       });
   });
 

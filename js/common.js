@@ -21,6 +21,8 @@ const APP_APPROVED = "3";
 const APPDIV_CUSTOMERREGIST = "1";
 
 // エラーメッセージ
+const ERRORMSG_LOGIN_DENIED = "ログインに失敗しました。";
+
 const ERRORMSG_NAME_LST_REQUIRED = "氏名（姓）の入力は必須です。";
 const ERRORMSG_NAME_FST_REQUIRED = "氏名（名）の入力は必須です。";
 const ERRORMSG_KANA_LST_REQUIRED = "氏名カナ（姓）の入力は必須です。";
@@ -76,46 +78,51 @@ $(function () {
   let tmploginUserTag = loginUserTag;
 
   const url = new URL(window.location.href);
-  loginCheck()
-    .then((login) => {
-      c_loginId = login.login_id;
-      c_loginNm = login.login_name;
-    })
-    .then(() => {
-      tmploginUserTag = tmploginUserTag.replace(
-        "{$loginName}",
-        "ログイン：" + c_loginNm
-      );
-      if (c_loginNm !== "") {
-        tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag);
-      } else {
-        tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", "");
-      }
+  const loginInfo = getSessionLoginInfo();
+
+  if (loginInfo) {
+    let jsLgInfo = JSON.parse(loginInfo);
+    c_loginId = jsLgInfo.login_id;
+    c_loginNm = jsLgInfo.login_name;
+
+    tmploginUserTag = tmploginUserTag.replace(
+      "{$loginName}",
+      "ログイン：" + c_loginNm
+    );
+    if (c_loginNm !== "") {
+      tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag);
+    } else {
+      tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", "");
+    }
+    $("#header").append(tmpHeaderTag);
+    $("#footer").append(
+      "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
+    );
+  } else {
+    delTmpData(FUNC_ID_LOGIN);
+
+    let url = window.location.href;
+    // アクセス先がログイン画面か判定（直アクセス防止）
+    if (url.indexOf("index.html") == -1) {
+      delTmpData(FUNC_ID_LOGIN);
+      // ログイン画面へ
+      window.location.href = "./index.html";
+    } else {
+      // ログイン画面の場合
+      tmploginUserTag = tmploginUserTag.replace("{$loginName}", "");
+      tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag);
       $("#header").append(tmpHeaderTag);
       $("#footer").append(
         "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
       );
-    })
-    .catch((error) => {
-      delTmpData(FUNC_ID_LOGIN);
-
-      let url = window.location.href;
-      // アクセス先がログイン画面か判定（直アクセス防止）
-      if (url.indexOf("index.html") == -1) {
-        delTmpData(FUNC_ID_LOGIN);
-        // ログイン画面へ
-        window.location.href = "./index.html";
-      } else {
-        // ログイン画面の場合
-        tmploginUserTag = tmploginUserTag.replace("{$loginName}", "");
-        tmpHeaderTag = tmpHeaderTag.replace("{$loginInfoTag}", tmploginUserTag);
-        $("#header").append(tmpHeaderTag);
-        $("#footer").append(
-          "<footer><p class='copyright'>Copyright © 2021 Falcs All Rights Reserved.</p></footer>"
-        );
-      }
-    });
+    }
+  }
 });
+
+// セッションに存在するログインデータを取得
+function getSessionLoginInfo() {
+  return sessionStorage.getItem("login_info");
+}
 
 function formatDate() {
   const dt = new Date();
