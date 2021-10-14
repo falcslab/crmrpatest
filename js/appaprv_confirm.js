@@ -18,9 +18,10 @@ $(document).ready(function () {
         $("#appaprv_complete").remove();
       }
 
+      console.log(c_loginId);
       // ログインユーザーが申請者の場合、差戻/承認ボタンを非表示
-      getTmpData(FUNC_ID_LOGIN).then((login) => {
-        if (appInfo.app_user_id === login[0].login_id) {
+      getTmpData(FUNC_ID_LOGIN).then(() => {
+        if (appInfo.app_user_id === c_loginId) {
           $("#appaprv_remand").remove();
           $("#appaprv_complete").remove();
         }
